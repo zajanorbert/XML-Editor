@@ -38,6 +38,7 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
             this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
+            this.vScrollBar2 = new System.Windows.Forms.VScrollBar();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -117,16 +118,24 @@
             // 
             // hScrollBar1
             // 
-            this.hScrollBar1.Location = new System.Drawing.Point(12, 360);
+            this.hScrollBar1.Location = new System.Drawing.Point(12, 362);
             this.hScrollBar1.Name = "hScrollBar1";
             this.hScrollBar1.Size = new System.Drawing.Size(884, 15);
             this.hScrollBar1.TabIndex = 5;
+            // 
+            // vScrollBar2
+            // 
+            this.vScrollBar2.Location = new System.Drawing.Point(896, 391);
+            this.vScrollBar2.Name = "vScrollBar2";
+            this.vScrollBar2.Size = new System.Drawing.Size(16, 95);
+            this.vScrollBar2.TabIndex = 6;
             // 
             // XMLKönnyFakasztinátor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(924, 509);
+            this.Controls.Add(this.vScrollBar2);
             this.Controls.Add(this.hScrollBar1);
             this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.richTextBox1);
@@ -156,6 +165,7 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.VScrollBar vScrollBar1;
         private System.Windows.Forms.HScrollBar hScrollBar1;
+        private System.Windows.Forms.VScrollBar vScrollBar2;
     }
 }
 
