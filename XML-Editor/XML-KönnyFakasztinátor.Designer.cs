@@ -1,6 +1,6 @@
 ﻿namespace XML_Editor
 {
-    partial class Form1
+    partial class XMLKönnyFakasztinátor
     {
         /// <summary>
         /// Required designer variable.
