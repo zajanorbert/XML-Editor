@@ -1,0 +1,9 @@
+C:\Users\baszd\codecool\XML-Editor\XML-Editor\bin\Debug\XML-Editor.exe.config
+C:\Users\baszd\codecool\XML-Editor\XML-Editor\bin\Debug\XML-Editor.exe
+C:\Users\baszd\codecool\XML-Editor\XML-Editor\bin\Debug\XML-Editor.pdb
+C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Debug\XML-Editor.csprojAssemblyReference.cache
+C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Debug\XML_Editor.Properties.Resources.resources
+C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Debug\XML_Editor.XMLKönnyFakasztinátor.resources
+C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Debug\XML-Editor.csproj.GenerateResource.cache
+C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Debug\XML-Editor.exe
+C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Debug\XML-Editor.pdb

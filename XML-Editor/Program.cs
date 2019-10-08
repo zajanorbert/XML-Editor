@@ -17,6 +17,7 @@ namespace XML_Editor
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new XMLKönnyFakasztinátor());
+
         }
     }
 }
