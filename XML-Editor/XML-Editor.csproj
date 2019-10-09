@@ -46,11 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="XML-Könnyfakasztinátor.cs">
+    <Compile Include="XML-Editor9000.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="XML-Könnyfakasztinátor.Designer.cs">
-      <DependentUpon>XML-Könnyfakasztinátor.cs</DependentUpon>
+    <Compile Include="XML-Editor9000.Designer.cs">
+      <DependentUpon>XML-Editor9000.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,8 +63,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="XML-KönnyFakasztinátor.resx">
-      <DependentUpon>XML-Könnyfakasztinátor.cs</DependentUpon>
+    <EmbeddedResource Include="XML-Editor9000.resx">
+      <DependentUpon>XML-Editor9000.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

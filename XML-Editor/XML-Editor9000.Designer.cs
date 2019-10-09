@@ -1,6 +1,6 @@
 ﻿namespace XML_Editor
 {
-    partial class XMLKönnyFakasztinátor
+    partial class XMLEditor9000
     {
         /// <summary>
         /// Required designer variable.
@@ -27,6 +27,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(XMLEditor9000));
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newXMLFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -167,7 +168,7 @@
             this.newTab.Controls.Add(this.richTextBox3);
             this.newTab.Location = new System.Drawing.Point(4, 22);
             this.newTab.Name = "newTab";
-            this.newTab.Size = new System.Drawing.Size(916, 364);
+            this.newTab.Size = new System.Drawing.Size(916, 375);
             this.newTab.TabIndex = 3;
             this.newTab.Text = "New Tab";
             this.newTab.UseVisualStyleBackColor = true;
@@ -177,11 +178,11 @@
             this.richTextBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox3.Location = new System.Drawing.Point(0, 0);
             this.richTextBox3.Name = "richTextBox3";
-            this.richTextBox3.Size = new System.Drawing.Size(916, 364);
+            this.richTextBox3.Size = new System.Drawing.Size(916, 375);
             this.richTextBox3.TabIndex = 1;
             this.richTextBox3.Text = "";
             // 
-            // XMLKönnyFakasztinátor
+            // XMLEditor9000
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -189,9 +190,10 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.menuStrip2);
-            this.Name = "XMLKönnyFakasztinátor";
-            this.Text = "XML-KönnyFakasztinátor";
-            this.Load += new System.EventHandler(this.XMLKönnyfakasztinátor_Load);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "XMLEditor9000";
+            this.Text = "XMLEditor9000";
+            this.Load += new System.EventHandler(this.XMLEditor9000_Load);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
             this.tabControl1.ResumeLayout(false);

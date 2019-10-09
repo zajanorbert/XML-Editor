@@ -11,12 +11,12 @@ using System.IO;
 
 namespace XML_Editor
 {
-    public partial class XMLKönnyFakasztinátor : Form
+    public partial class XMLEditor9000 : Form
     {
 
         private RichTextBox focusedRichTextBox;
 
-        public XMLKönnyFakasztinátor()
+        public XMLEditor9000()
         {
             InitializeComponent();
             foreach (RichTextBox rtb in this.Controls.OfType<RichTextBox>())
@@ -31,7 +31,7 @@ namespace XML_Editor
             focusedRichTextBox = (RichTextBox)sender;
         }
 
-        private void XMLKönnyfakasztinátor_Load(object sender, EventArgs e)
+        private void XMLEditor9000_Load(object sender, EventArgs e)
         {
 
         }
