@@ -121,13 +121,13 @@
             // listBox1
             // 
             this.listBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.listBox1.ForeColor = System.Drawing.Color.Red;
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 20;
-            this.listBox1.Location = new System.Drawing.Point(0, 425);
+            this.listBox1.ItemHeight = 15;
+            this.listBox1.Location = new System.Drawing.Point(0, 430);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(924, 84);
+            this.listBox1.Size = new System.Drawing.Size(924, 79);
             this.listBox1.TabIndex = 2;
             // 
             // tabControl1
@@ -138,7 +138,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(924, 401);
+            this.tabControl1.Size = new System.Drawing.Size(924, 406);
             this.tabControl1.TabIndex = 7;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             this.tabControl1.DoubleClick += new System.EventHandler(this.closeTab);
@@ -149,7 +149,7 @@
             this.tabPage1.Controls.Add(this.richTextBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(916, 375);
+            this.tabPage1.Size = new System.Drawing.Size(916, 380);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Untitled";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -158,8 +158,9 @@
             // 
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox1.Multiline = false;
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(916, 375);
+            this.richTextBox1.Size = new System.Drawing.Size(916, 380);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             // 
@@ -168,7 +169,7 @@
             this.newTab.Controls.Add(this.richTextBox3);
             this.newTab.Location = new System.Drawing.Point(4, 22);
             this.newTab.Name = "newTab";
-            this.newTab.Size = new System.Drawing.Size(916, 375);
+            this.newTab.Size = new System.Drawing.Size(916, 380);
             this.newTab.TabIndex = 3;
             this.newTab.Text = "New Tab";
             this.newTab.UseVisualStyleBackColor = true;
@@ -178,7 +179,7 @@
             this.richTextBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox3.Location = new System.Drawing.Point(0, 0);
             this.richTextBox3.Name = "richTextBox3";
-            this.richTextBox3.Size = new System.Drawing.Size(916, 375);
+            this.richTextBox3.Size = new System.Drawing.Size(916, 380);
             this.richTextBox3.TabIndex = 1;
             this.richTextBox3.Text = "";
             // 

@@ -8,12 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace XML_Editor
 {
     public partial class XMLEditor9000 : Form
     {
-
+        private int _issueCounter;
+        private List<string> _validationComments;
         private RichTextBox focusedRichTextBox;
 
         public XMLEditor9000()
@@ -38,26 +42,116 @@ namespace XML_Editor
 
         private void openXMLFileToolStripMenuItem_Click_1(object sender, MouseEventArgs me)
         {
-            Stream myStream;
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            Stream xmlStream;
+            Stream xsdStream;
+            string xsdPath = "";
+            OpenFileDialog xmlFileDialog = new OpenFileDialog();
+            xmlFileDialog.Filter = "XML files (*.xml)|*.xml";
+            OpenFileDialog xsdFileDialog = new OpenFileDialog();
+            xsdFileDialog.Filter = "XSD files (*.xsd)|*.xsd";
+            _validationComments = new List<string>();
+
+
+            bool isValid = false;
+            string xmlPath = "";
+            try
             {
-                if ((myStream = openFileDialog1.OpenFile()) != null)
+                XmlReaderSettings rearderSettings = new XmlReaderSettings();
+                rearderSettings.ValidationType = ValidationType.Schema;
+                rearderSettings.ValidationFlags |=
+                  XmlSchemaValidationFlags.ProcessSchemaLocation |
+                  XmlSchemaValidationFlags.ReportValidationWarnings |
+                  XmlSchemaValidationFlags.ProcessIdentityConstraints |
+                  XmlSchemaValidationFlags.AllowXmlAttributes;
+
+
+                
+                if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    //string title = "TabPage " + (tabControl1.TabCount + 1).ToString();
-                    string strfilename = openFileDialog1.FileName;
-                    string filetext = File.ReadAllText(strfilename);
-                    RichTextBox box = new RichTextBox();
-                    box.Dock = DockStyle.Fill;
-                    TabPage tab = addTab(sender, strfilename, me);
-                    box.Text = filetext;
-                    tab.Controls.Add(box);
-                    focusedRichTextBox = box;
-                    
+                    if ((xmlStream = xmlFileDialog.OpenFile()) != null)
+                    {
+                        //string title = "TabPage " + (tabControl1.TabCount + 1).ToString();
+                        xmlPath = xmlFileDialog.FileName;
+                        RichTextBox box = new RichTextBox();
+                        box.Dock = DockStyle.Fill;
+                        TabPage tab = addTab(sender, xmlPath, me);
+
+                        if (xsdFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            if ((xsdStream = xsdFileDialog.OpenFile()) != null)
+                            {
+                                xsdPath = xsdFileDialog.FileName;
+                                string xsdText = File.ReadAllText(xsdPath);
+                                listBox1.Items.Add("XSD file loaded");
+                            }
+                        }
+
+                        rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
+                        rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
+
+                        using (XmlReader xmlValidatingReader = XmlReader.Create(xmlPath, rearderSettings))
+                        {
+                            while (xmlValidatingReader.Read())
+                            {
+                                box.Text = xmlValidatingReader.ReadOuterXml();
+
+                            }
+                        }
+
+                        //string xmlText = File.ReadAllText(xmlPath);
+
+                        tab.Controls.Add(box);
+                        focusedRichTextBox = box;
+                        listBox1.Items.Add("XML file loaded");
+
+                    }
                 }
+
+
             }
+            catch (Exception error)
+            {
+                isValid = false;
+                listBox1.Items.Add("Exception " + error.Message);
+            }
+
+            ValidationReport(System.IO.Path.GetFileName(xmlPath));
+            //return isValid;
         }
 
+        private void ValidationReport(string fileName)
+        {
+
+
+            listBox1.Items.Add("|=======================================|");
+            if (_issueCounter > 0)
+            {
+                listBox1.Items.Add(fileName +" is not valid");
+            }
+            else
+            {
+                listBox1.Items.Add(fileName + " is valid");
+            }
+            //listBox1.Items.Add("Xml {0}", _issueCounter > 0 ? "is not valid" : "is valid");
+            if (_issueCounter > 0)
+            {
+                listBox1.Items.Add("Warnings or Errors: " + _issueCounter);
+                foreach (var comment in _validationComments) { listBox1.Items.Add(comment); }
+            }
+            listBox1.Items.Add("|=======================================|");
+        }
+
+        private void XmlValidationEventHandler(object sender, ValidationEventArgs e)
+        {
+            _issueCounter++;
+            _validationComments.Add(string.Format("{0} @ line {1} position {2}: {3} \r\n",
+              (e.Severity == XmlSeverityType.Error ? "ERROR" : "WARNING"),
+              e.Exception.LineNumber,
+              e.Exception.LinePosition,
+              e.Message));
+        }
+
+        #region tabcontrol
         private void closeTab(object sender, EventArgs e)
         {
             if (!tabControl1.SelectedTab.Equals(newTab))
@@ -101,9 +195,9 @@ namespace XML_Editor
             if (e.TabPage.HasChildren)
             {
                 focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBox>().First();
-                //MessageBox.Show(focusedRichTextBox.Text);
             }
         }
+        #endregion tabcontrol
 
         private void saveFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
