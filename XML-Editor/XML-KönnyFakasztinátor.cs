@@ -14,7 +14,7 @@ namespace XML_Editor
     public partial class XMLKönnyFakasztinátor : Form
     {
 
-        private RichTextBox focusedRichTextBox = null;
+        private RichTextBox focusedRichTextBox;
 
         public XMLKönnyFakasztinátor()
         {
@@ -52,6 +52,8 @@ namespace XML_Editor
                     TabPage tab = addTab(sender, strfilename, me);
                     box.Text = filetext;
                     tab.Controls.Add(box);
+                    focusedRichTextBox = box;
+                    
                 }
             }
         }
@@ -65,17 +67,17 @@ namespace XML_Editor
         private TabPage addTab(object sender, string strfilename, MouseEventArgs me)
         {
             var lastIndex = this.tabControl1.TabCount - 1;
-            if (!this.tabControl1.GetTabRect(lastIndex).Contains(me.Location))
-            {
-                string dbf_File = System.IO.Path.GetFileName(strfilename);
+            /*if (this.tabControl1.GetTabRect(lastIndex).Contains(me.Location))
+            {*/
+            string dbf_File = System.IO.Path.GetFileName(strfilename);
 
-                string title = dbf_File;
-                TabPage myTabPage = new TabPage(title);
-                tabControl1.TabPages.Insert(lastIndex, myTabPage);
-                this.tabControl1.SelectedIndex = lastIndex;
-                return myTabPage;
-            }
-            return null;
+            string title = dbf_File;
+            TabPage myTabPage = new TabPage(title);
+            tabControl1.TabPages.Insert(lastIndex, myTabPage);
+            this.tabControl1.SelectedIndex = lastIndex;
+            return myTabPage;
+            /*}
+            return null;*/
         }
 
         private void tabControl1_MouseClick(object sender, MouseEventArgs e)
@@ -94,28 +96,46 @@ namespace XML_Editor
 
         }
 
+        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        {
+            if (e.TabPage.HasChildren)
+            {
+                focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBox>().First();
+                //MessageBox.Show(focusedRichTextBox.Text);
+            }
+        }
+
         private void saveFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                using (Stream s = File.Open(saveFileDialog1.FileName, FileMode.CreateNew))
-                using (StreamWriter sw = new StreamWriter(s))
+                if (saveFileDialog1.CheckFileExists)
                 {
-                    sw.Write(focusedRichTextBox.Text);
+                    using (Stream s = File.Open(saveFileDialog1.FileName, FileMode.CreateNew))
+                    using (StreamWriter sw = new StreamWriter(s))
+                    {
+                        sw.Write(focusedRichTextBox.Text);
 
+                    }
+                }
+                else
+                {
+                    using (Stream s = File.Open(saveFileDialog1.FileName, FileMode.Create))
+                    using (StreamWriter sw = new StreamWriter(s))
+                    {
+                        sw.Write(focusedRichTextBox.Text);
+
+                    }
                 }
             }
         }
 
-        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.HasChildren)
-            {
-                focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBox>().First();
-            }
-            
-            
+
+            listBox1.Items.Add("Starter project for an XML-Editor applicaion ");
+            listBox1.Items.Add("Programmed by Barna Dénes & Zaja Norbert");
         }
     }
 }
