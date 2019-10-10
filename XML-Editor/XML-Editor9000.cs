@@ -65,7 +65,7 @@ namespace XML_Editor
                   XmlSchemaValidationFlags.AllowXmlAttributes;
 
 
-                
+
                 if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     if ((xmlStream = xmlFileDialog.OpenFile()) != null)
@@ -126,7 +126,7 @@ namespace XML_Editor
             listBox1.Items.Add("|=======================================|");
             if (_issueCounter > 0)
             {
-                listBox1.Items.Add(fileName +" is not valid");
+                listBox1.Items.Add(fileName + " is not valid");
             }
             else
             {
@@ -202,6 +202,7 @@ namespace XML_Editor
         private void saveFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "XML files (*.xml)|*.xml";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 if (saveFileDialog1.CheckFileExists)
@@ -215,19 +216,14 @@ namespace XML_Editor
                 }
                 else
                 {
-                    using (Stream s = File.Open(saveFileDialog1.FileName, FileMode.Create))
-                    using (StreamWriter sw = new StreamWriter(s))
-                    {
-                        sw.Write(focusedRichTextBox.Text);
-
-                    }
+                    File.WriteAllText(saveFileDialog1.FileName, focusedRichTextBox.Text);
+                    
                 }
             }
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             listBox1.Items.Add("Starter project for an XML-Editor applicaion ");
             listBox1.Items.Add("Programmed by Barna Dénes & Zaja Norbert");
         }
