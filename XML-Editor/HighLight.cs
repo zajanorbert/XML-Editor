@@ -17,7 +17,7 @@ namespace XML_Editor
         public static Color HC_INNERTEXT = Color.Black;
 
 
-        public void hLRTF(RichTextBox rtb)
+        public static void hLRTF(RichTextBox rtb)
         {
             int k = 0;
 

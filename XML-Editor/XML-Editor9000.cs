@@ -42,6 +42,7 @@ namespace XML_Editor
 
         private void openXMLFileToolStripMenuItem_Click_1(object sender, MouseEventArgs me)
         {
+            _issueCounter = 0;
             Stream xmlStream;
             Stream xsdStream;
             string xsdPath = "";
@@ -76,32 +77,53 @@ namespace XML_Editor
                         box.Dock = DockStyle.Fill;
                         TabPage tab = addTab(sender, xmlPath, me);
 
-                        if (xsdFileDialog.ShowDialog() == DialogResult.OK)
+                        //read xml
+                        try
+                        {
+
+
+                            string xsdName;
+                            using (XmlReader xmlValidatingReader = XmlReader.Create(xmlPath, rearderSettings))
+                            {
+                                while (xmlValidatingReader.Read())
+                                {
+                                    xsdName = xmlValidatingReader.GetAttribute("xsi:noNamespaceSchemaLocation");
+                                    if (xsdName != null)
+                                    {
+                                        //listBox1.Items.Add(xsdName);
+                                        xsdPath = xmlPath.Replace("xml", "xsd");
+                                        break;
+                                    }
+                                    //throw new FileNotFoundException();
+                                }
+                            }
+                            rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
+                            rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
+                        }
+                        catch (Exception e)
+                        {
+                            listBox1.Items.Add("invalid xsd path, validation is not valid");
+                        }
+
+                        //read xsd
+                        /*if (xsdFileDialog.ShowDialog() == DialogResult.OK)
                         {
                             if ((xsdStream = xsdFileDialog.OpenFile()) != null)
                             {
                                 xsdPath = xsdFileDialog.FileName;
-                                string xsdText = File.ReadAllText(xsdPath);
+                                //string xsdText = File.ReadAllText(xsdPath);
                                 listBox1.Items.Add("XSD file loaded");
                             }
-                        }
+                        }*/
 
-                        rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
-                        rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
+                        
 
-                        using (XmlReader xmlValidatingReader = XmlReader.Create(xmlPath, rearderSettings))
-                        {
-                            while (xmlValidatingReader.Read())
-                            {
-                                box.Text = xmlValidatingReader.ReadOuterXml();
-
-                            }
-                        }
-
+                        box.Text = File.ReadAllText(xmlPath);
                         //string xmlText = File.ReadAllText(xmlPath);
 
                         tab.Controls.Add(box);
                         focusedRichTextBox = box;
+                        HighLight.hLRTF(focusedRichTextBox);
                         listBox1.Items.Add("XML file loaded");
 
                     }
@@ -195,6 +217,7 @@ namespace XML_Editor
             if (e.TabPage.HasChildren)
             {
                 focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBox>().First();
+                HighLight.hLRTF(focusedRichTextBox);
             }
         }
         #endregion tabcontrol
@@ -217,15 +240,15 @@ namespace XML_Editor
                 else
                 {
                     File.WriteAllText(saveFileDialog1.FileName, focusedRichTextBox.Text);
-                    
+
                 }
             }
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            listBox1.Items.Add("Starter project for an XML-Editor applicaion ");
-            listBox1.Items.Add("Programmed by Barna Dénes & Zaja Norbert");
+            About a = new About();
+            a.Show();
         }
     }
 }
