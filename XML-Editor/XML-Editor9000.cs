@@ -66,6 +66,88 @@ namespace XML_Editor
                   XmlSchemaValidationFlags.AllowXmlAttributes;
 
 
+                #region modified_file_open
+                /*if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    if ((xmlStream = xmlFileDialog.OpenFile()) != null)
+                    {
+                        //string title = "TabPage " + (tabControl1.TabCount + 1).ToString();
+
+                        RichTextBox box = new RichTextBox();
+                        box.Dock = DockStyle.Fill;
+                        xmlPath = xmlFileDialog.FileName;
+                        TabPage tab = addTab(sender, xmlPath, me);
+
+                        using (XmlReader xmlValidatingReader = XmlReader.Create(xmlPath, rearderSettings))
+                        {
+                            try
+                            {
+
+                                string xsdName;
+
+                                bool found = false;
+                                while (xmlValidatingReader.Read())
+                                {
+                                    xsdName = xmlValidatingReader.GetAttribute("xsi:noNamespaceSchemaLocation");
+                                    if (xsdName != null)
+                                    {
+                                        listBox1.Items.Add(xsdName);
+                                        xsdPath = xmlPath.Replace("xml", "xsd");
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (!found)
+                                {
+                                    throw new Exception();
+
+                                }
+                                else
+                                {
+                                    rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
+                                    rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
+
+                                    box.Text = File.ReadAllText(xmlPath);
+                                    tab.Controls.Add(box);
+                                    focusedRichTextBox = box;
+                                    HighLight.hLRTF(focusedRichTextBox);
+                                    listBox1.Items.Add("XML file loaded");
+                                }
+
+
+                            }
+                            catch (Exception e)
+                            {
+                                MessageBox.Show("invalid xsd path or not exist, validation failed");
+
+                                if (xsdFileDialog.ShowDialog() == DialogResult.OK)
+                                {
+                                    if ((xsdStream = xsdFileDialog.OpenFile()) != null)
+                                    {
+                                        xsdPath = xsdFileDialog.FileName;
+                                        //string xsdText = File.ReadAllText(xsdPath);
+                                        listBox1.Items.Add("XSD file loaded");
+                                    }
+                                }
+                                xmlValidatingReader.Close();
+                                using (XmlReader xmlValidating = XmlReader.Create(xmlPath, rearderSettings))
+                                {
+                                    
+                                    rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
+                                    rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
+                                }
+
+                                box.Text = File.ReadAllText(xmlPath);
+                                tab.Controls.Add(box);
+                                focusedRichTextBox = box;
+                                HighLight.hLRTF(focusedRichTextBox);
+                                listBox1.Items.Add("XML file loaded");
+                            }
+
+                        }
+                    }
+                }*/
+                #endregion modified_file_open
 
                 if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
@@ -76,59 +158,31 @@ namespace XML_Editor
                         RichTextBox box = new RichTextBox();
                         box.Dock = DockStyle.Fill;
                         TabPage tab = addTab(sender, xmlPath, me);
-
-                        //read xml
-                        try
-                        {
-
-
-                            string xsdName;
-                            using (XmlReader xmlValidatingReader = XmlReader.Create(xmlPath, rearderSettings))
-                            {
-                                while (xmlValidatingReader.Read())
-                                {
-                                    xsdName = xmlValidatingReader.GetAttribute("xsi:noNamespaceSchemaLocation");
-                                    if (xsdName != null)
-                                    {
-                                        //listBox1.Items.Add(xsdName);
-                                        xsdPath = xmlPath.Replace("xml", "xsd");
-                                        break;
-                                    }
-                                    //throw new FileNotFoundException();
-                                }
-                            }
-                            rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
-                            rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
-                        }
-                        catch (Exception e)
-                        {
-                            listBox1.Items.Add("invalid xsd path, validation is not valid");
-                        }
-
-                        //read xsd
-                        /*if (xsdFileDialog.ShowDialog() == DialogResult.OK)
+                        if (xsdFileDialog.ShowDialog() == DialogResult.OK)
                         {
                             if ((xsdStream = xsdFileDialog.OpenFile()) != null)
                             {
                                 xsdPath = xsdFileDialog.FileName;
-                                //string xsdText = File.ReadAllText(xsdPath);
+                                string xsdText = File.ReadAllText(xsdPath);
                                 listBox1.Items.Add("XSD file loaded");
                             }
-                        }*/
-
-                        
-
+                        }
+                        rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
+                        rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
+                        using (XmlReader xmlValidatingReader = XmlReader.Create(xmlPath, rearderSettings))
+                        {
+                            while (xmlValidatingReader.Read())
+                            {
+                                //box.Text = xmlValidatingReader.ReadOuterXml();
+                            }
+                        }
                         box.Text = File.ReadAllText(xmlPath);
-                        //string xmlText = File.ReadAllText(xmlPath);
-
                         tab.Controls.Add(box);
                         focusedRichTextBox = box;
                         HighLight.hLRTF(focusedRichTextBox);
                         listBox1.Items.Add("XML file loaded");
-
                     }
                 }
-
 
             }
             catch (Exception error)
@@ -137,31 +191,11 @@ namespace XML_Editor
                 listBox1.Items.Add("Exception " + error.Message);
             }
 
-            ValidationReport(System.IO.Path.GetFileName(xmlPath));
+            Validation.ValidationReport(System.IO.Path.GetFileName(xmlPath), listBox1, _issueCounter, _validationComments);
             //return isValid;
         }
 
-        private void ValidationReport(string fileName)
-        {
 
-
-            listBox1.Items.Add("|=======================================|");
-            if (_issueCounter > 0)
-            {
-                listBox1.Items.Add(fileName + " is not valid");
-            }
-            else
-            {
-                listBox1.Items.Add(fileName + " is valid");
-            }
-            //listBox1.Items.Add("Xml {0}", _issueCounter > 0 ? "is not valid" : "is valid");
-            if (_issueCounter > 0)
-            {
-                listBox1.Items.Add("Warnings or Errors: " + _issueCounter);
-                foreach (var comment in _validationComments) { listBox1.Items.Add(comment); }
-            }
-            listBox1.Items.Add("|=======================================|");
-        }
 
         private void XmlValidationEventHandler(object sender, ValidationEventArgs e)
         {

@@ -52,6 +52,7 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="Validation.cs" />
     <Compile Include="XML-Editor9000.cs">
       <SubType>Form</SubType>
     </Compile>
