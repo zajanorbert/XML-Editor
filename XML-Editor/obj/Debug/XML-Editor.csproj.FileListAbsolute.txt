@@ -8,3 +8,13 @@ C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Debug\XML-Editor.csproj.Genera
 C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Debug\XML-Editor.exe
 C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Debug\XML-Editor.pdb
 C:\Users\baszd\codecool\XML-editor\XML-Editor\obj\Debug\XML_Editor.About.resources
+C:\Users\Licht\Desktop\XML-Editor\XML-Editor\bin\Debug\XML-Editor.exe.config
+C:\Users\Licht\Desktop\XML-Editor\XML-Editor\bin\Debug\XML-Editor.exe
+C:\Users\Licht\Desktop\XML-Editor\XML-Editor\bin\Debug\XML-Editor.pdb
+C:\Users\Licht\Desktop\XML-Editor\XML-Editor\obj\Debug\XML-Editor.csprojAssemblyReference.cache
+C:\Users\Licht\Desktop\XML-Editor\XML-Editor\obj\Debug\XML_Editor.About.resources
+C:\Users\Licht\Desktop\XML-Editor\XML-Editor\obj\Debug\XML_Editor.Properties.Resources.resources
+C:\Users\Licht\Desktop\XML-Editor\XML-Editor\obj\Debug\XML_Editor.XMLEditor9000.resources
+C:\Users\Licht\Desktop\XML-Editor\XML-Editor\obj\Debug\XML-Editor.csproj.GenerateResource.cache
+C:\Users\Licht\Desktop\XML-Editor\XML-Editor\obj\Debug\XML-Editor.exe
+C:\Users\Licht\Desktop\XML-Editor\XML-Editor\obj\Debug\XML-Editor.pdb

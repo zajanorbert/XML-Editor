@@ -284,5 +284,13 @@ namespace XML_Editor
             About a = new About();
             a.Show();
         }
+
+        private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Control == true && e.KeyCode == Keys.S)
+            {
+                saveFileToolStripMenuItem.PerformClick();
+            }
+        }
     }
 }

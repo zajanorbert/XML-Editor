@@ -76,27 +76,27 @@
             // newXMLFileToolStripMenuItem
             // 
             this.newXMLFileToolStripMenuItem.Name = "newXMLFileToolStripMenuItem";
-            this.newXMLFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.newXMLFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newXMLFileToolStripMenuItem.Text = "New XML file";
             // 
             // openXMLFileToolStripMenuItem
             // 
             this.openXMLFileToolStripMenuItem.Name = "openXMLFileToolStripMenuItem";
-            this.openXMLFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.openXMLFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openXMLFileToolStripMenuItem.Text = "Open XML file";
             this.openXMLFileToolStripMenuItem.MouseUp += new System.Windows.Forms.MouseEventHandler(this.openXMLFileToolStripMenuItem_Click_1);
             // 
             // saveFileToolStripMenuItem
             // 
             this.saveFileToolStripMenuItem.Name = "saveFileToolStripMenuItem";
-            this.saveFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.saveFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveFileToolStripMenuItem.Text = "Save file";
             this.saveFileToolStripMenuItem.Click += new System.EventHandler(this.saveFileToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // editToolStripMenuItem
@@ -169,7 +169,7 @@
             this.newTab.Controls.Add(this.richTextBox3);
             this.newTab.Location = new System.Drawing.Point(4, 22);
             this.newTab.Name = "newTab";
-            this.newTab.Size = new System.Drawing.Size(916, 380);
+            this.newTab.Size = new System.Drawing.Size(916, 350);
             this.newTab.TabIndex = 3;
             this.newTab.Text = "New Tab";
             this.newTab.UseVisualStyleBackColor = true;
@@ -179,7 +179,7 @@
             this.richTextBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox3.Location = new System.Drawing.Point(0, 0);
             this.richTextBox3.Name = "richTextBox3";
-            this.richTextBox3.Size = new System.Drawing.Size(916, 380);
+            this.richTextBox3.Size = new System.Drawing.Size(916, 350);
             this.richTextBox3.TabIndex = 1;
             this.richTextBox3.Text = "";
             // 
@@ -192,9 +192,11 @@
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.menuStrip2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "XMLEditor9000";
             this.Text = "XMLEditor9000";
             this.Load += new System.EventHandler(this.XMLEditor9000_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.XMLEditor9000_KeyDown);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
             this.tabControl1.ResumeLayout(false);
