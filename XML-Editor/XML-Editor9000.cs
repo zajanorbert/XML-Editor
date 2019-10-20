@@ -292,5 +292,15 @@ namespace XML_Editor
                 saveFileToolStripMenuItem.PerformClick();
             }
         }
+
+        private void FontSizeOption_Click(object sender, EventArgs e)
+        {
+            FontDialog fd = new FontDialog();
+
+            if(fd.ShowDialog() == DialogResult.OK)
+            {
+                richTextBox1.Font = fd.Font;
+            }
+        }
     }
 }

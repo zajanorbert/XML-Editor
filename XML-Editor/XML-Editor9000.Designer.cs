@@ -36,6 +36,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.FontSizeOption = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -51,6 +52,7 @@
             // 
             // menuStrip2
             // 
+            this.menuStrip2.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
@@ -76,27 +78,27 @@
             // newXMLFileToolStripMenuItem
             // 
             this.newXMLFileToolStripMenuItem.Name = "newXMLFileToolStripMenuItem";
-            this.newXMLFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.newXMLFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.newXMLFileToolStripMenuItem.Text = "New XML file";
             // 
             // openXMLFileToolStripMenuItem
             // 
             this.openXMLFileToolStripMenuItem.Name = "openXMLFileToolStripMenuItem";
-            this.openXMLFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openXMLFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.openXMLFileToolStripMenuItem.Text = "Open XML file";
             this.openXMLFileToolStripMenuItem.MouseUp += new System.Windows.Forms.MouseEventHandler(this.openXMLFileToolStripMenuItem_Click_1);
             // 
             // saveFileToolStripMenuItem
             // 
             this.saveFileToolStripMenuItem.Name = "saveFileToolStripMenuItem";
-            this.saveFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.saveFileToolStripMenuItem.Text = "Save file";
             this.saveFileToolStripMenuItem.Click += new System.EventHandler(this.saveFileToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // editToolStripMenuItem
@@ -107,9 +109,18 @@
             // 
             // settingsToolStripMenuItem
             // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.FontSizeOption});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // FontSizeOption
+            // 
+            this.FontSizeOption.Name = "FontSizeOption";
+            this.FontSizeOption.Size = new System.Drawing.Size(180, 22);
+            this.FontSizeOption.Text = "Font Size";
+            this.FontSizeOption.Click += new System.EventHandler(this.FontSizeOption_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -135,6 +146,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.newTab);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.ItemSize = new System.Drawing.Size(18, 18);
             this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -223,6 +235,7 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.TabPage newTab;
         private System.Windows.Forms.RichTextBox richTextBox3;
+        private System.Windows.Forms.ToolStripMenuItem FontSizeOption;
     }
 }
 
