@@ -29,6 +29,24 @@ namespace XML_Editor
                 rtb.Enter += richTextBox_Enter;
             }
 
+            richTextBox1.Text = "Valami szar ";
+
+            LinkLabel link = new LinkLabel();
+            link.Text = "itt, ide kattincs";
+            link.LinkClicked += DoShit;
+            LinkLabel.Link data = new LinkLabel.Link();
+            data.LinkData = @"C:\";
+            link.Links.Add(data);
+            link.AutoSize = true;
+            link.Location =
+                this.richTextBox1.GetPositionFromCharIndex(this.richTextBox1.TextLength);
+            this.richTextBox1.Controls.Add(link);
+            this.richTextBox1.AppendText(link.Text + " na most jo te szajha?");
+        }
+
+        private void DoShit(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Console.WriteLine("BUMMM {0}", e.Link.LinkData);
         }
 
         void richTextBox_Enter(object sender, EventArgs e)
@@ -39,183 +57,6 @@ namespace XML_Editor
         private void XMLEditor9000_Load(object sender, EventArgs e)
         {
             focusedRichTextBox = richTextBox1;
-        }
-
-        private void openXMLFileToolStripMenuItem_Click_1(object sender, MouseEventArgs me)
-        {
-            _issueCounter = 0;
-            Stream xmlStream;
-            Stream xsdStream;
-            string xsdPath = "";
-            OpenFileDialog xmlFileDialog = new OpenFileDialog();
-            xmlFileDialog.Filter = "XML files (*.xml)|*.xml";
-            OpenFileDialog xsdFileDialog = new OpenFileDialog();
-            xsdFileDialog.Filter = "XSD files (*.xsd)|*.xsd";
-            _validationComments = new List<string>();
-
-
-            bool isValid = false;
-            string xmlPath = "";
-            try
-            {
-                XmlReaderSettings rearderSettings = new XmlReaderSettings();
-                rearderSettings.ValidationType = ValidationType.Schema;
-                rearderSettings.ValidationFlags |=
-                  XmlSchemaValidationFlags.ProcessSchemaLocation |
-                  XmlSchemaValidationFlags.ReportValidationWarnings |
-                  XmlSchemaValidationFlags.ProcessIdentityConstraints |
-                  XmlSchemaValidationFlags.AllowXmlAttributes;
-
-
-                #region modified_file_open
-                /*if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    if ((xmlStream = xmlFileDialog.OpenFile()) != null)
-                    {
-                        //string title = "TabPage " + (tabControl1.TabCount + 1).ToString();
-
-                        RichTextBox box = new RichTextBox();
-                        box.Dock = DockStyle.Fill;
-                        xmlPath = xmlFileDialog.FileName;
-                        TabPage tab = addTab(sender, xmlPath, me);
-
-                        using (XmlReader xmlValidatingReader = XmlReader.Create(xmlPath, rearderSettings))
-                        {
-                            try
-                            {
-
-                                string xsdName;
-
-                                bool found = false;
-                                while (xmlValidatingReader.Read())
-                                {
-                                    xsdName = xmlValidatingReader.GetAttribute("xsi:noNamespaceSchemaLocation");
-                                    if (xsdName != null)
-                                    {
-                                        listBox1.Items.Add(xsdName);
-                                        xsdPath = xmlPath.Replace("xml", "xsd");
-                                        found = true;
-                                        break;
-                                    }
-                                }
-                                if (!found)
-                                {
-                                    throw new Exception();
-
-                                }
-                                else
-                                {
-                                    rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
-                                    rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
-
-                                    box.Text = File.ReadAllText(xmlPath);
-                                    tab.Controls.Add(box);
-                                    focusedRichTextBox = box;
-                                    HighLight.hLRTF(focusedRichTextBox);
-                                    listBox1.Items.Add("XML file loaded");
-                                }
-
-
-                            }
-                            catch (Exception e)
-                            {
-                                MessageBox.Show("invalid xsd path or not exist, validation failed");
-
-                                if (xsdFileDialog.ShowDialog() == DialogResult.OK)
-                                {
-                                    if ((xsdStream = xsdFileDialog.OpenFile()) != null)
-                                    {
-                                        xsdPath = xsdFileDialog.FileName;
-                                        //string xsdText = File.ReadAllText(xsdPath);
-                                        listBox1.Items.Add("XSD file loaded");
-                                    }
-                                }
-                                xmlValidatingReader.Close();
-                                using (XmlReader xmlValidating = XmlReader.Create(xmlPath, rearderSettings))
-                                {
-                                    
-                                    rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
-                                    rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
-                                }
-
-                                box.Text = File.ReadAllText(xmlPath);
-                                tab.Controls.Add(box);
-                                focusedRichTextBox = box;
-                                HighLight.hLRTF(focusedRichTextBox);
-                                listBox1.Items.Add("XML file loaded");
-                            }
-
-                        }
-                    }
-                }*/
-                #endregion modified_file_open
-
-                if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    if ((xmlStream = xmlFileDialog.OpenFile()) != null)
-                    {
-                        //string title = "TabPage " + (tabControl1.TabCount + 1).ToString();
-                        xmlPath = xmlFileDialog.FileName;
-                        RichTextBox box = new RichTextBox();
-                        box.Dock = DockStyle.Fill;
-                        TabPage tab = addTab(sender, xmlPath, me);
-                        if (xsdFileDialog.ShowDialog() == DialogResult.OK)
-                        {
-                            if ((xsdStream = xsdFileDialog.OpenFile()) != null)
-                            {
-                                xsdPath = xsdFileDialog.FileName;
-                                string xsdText = File.ReadAllText(xsdPath);
-                                listBox1.Items.Add("XSD file loaded");
-                            }
-                        }
-                        rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
-                        rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
-                        using (XmlReader xmlValidatingReader = XmlReader.Create(xmlPath, rearderSettings))
-                        {
-                            while (xmlValidatingReader.Read())
-                            {
-                                //box.Text = xmlValidatingReader.ReadOuterXml();
-                            }
-                        }
-                        box.Text = File.ReadAllText(xmlPath);
-
-                        //...........................................................................
-
-                        tab.Controls.Add(box);
-                        focusedRichTextBox = box;
-                        HighLight.hLRTF(focusedRichTextBox);
-                        listBox1.Items.Add("XML file loaded");
-                        
-                    }
-                }
-
-            }
-            catch (Exception error)
-            {
-                isValid = false;
-                listBox1.Items.Add("Exception " + error.Message);
-            }
-
-            Validation.ValidationReport(System.IO.Path.GetFileName(xmlPath), listBox1, _issueCounter, _validationComments);
-            //return isValid;
-        }
-
-        private XmlWriterSettings xmlIndenter(int whiteSpace)
-        {
-            int counter = 2;
-            string whiteSp = "  ";
-
-            while (counter != whiteSpace)
-            {
-                counter++;
-                whiteSp += " ";
-            }
-
-            XmlWriterSettings myXmlWriter = new XmlWriterSettings()
-            { Indent = true, IndentChars = whiteSp, OmitXmlDeclaration = false };
-
-            return myXmlWriter;
-
         }
 
         private void XmlValidationEventHandler(object sender, ValidationEventArgs e)
@@ -282,7 +123,7 @@ namespace XML_Editor
         }
         #endregion tabcontrol
 
-        #region File
+        #region Menu
         private void saveFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -295,32 +136,156 @@ namespace XML_Editor
                     using (StreamWriter sw = new StreamWriter(s))
                     {
                         sw.Write(focusedRichTextBox.Text);
-
                     }
                 }
                 else
                 {
 
                     File.WriteAllText(saveFileDialog1.FileName, focusedRichTextBox.Text);
-
                 }
             }
         }
 
+        private void openXMLFileToolStripMenuItem_Click_1(object sender, MouseEventArgs me)
+        {
+            Stream xmlStream;
+            OpenFileDialog xmlFileDialog = new OpenFileDialog();
+            xmlFileDialog.Filter = "XML files (*.xml)|*.xml";
+            bool isValid = false;
+            string xmlPath = "";
+
+            #region modified_file_open
+            /*if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                if ((xmlStream = xmlFileDialog.OpenFile()) != null)
+                {
+                    //string title = "TabPage " + (tabControl1.TabCount + 1).ToString();
+
+                    RichTextBox box = new RichTextBox();
+                    box.Dock = DockStyle.Fill;
+                    xmlPath = xmlFileDialog.FileName;
+                    TabPage tab = addTab(sender, xmlPath, me);
+
+                    using (XmlReader xmlValidatingReader = XmlReader.Create(xmlPath, rearderSettings))
+                    {
+                        try
+                        {
+
+                            string xsdName;
+
+                            bool found = false;
+                            while (xmlValidatingReader.Read())
+                            {
+                                xsdName = xmlValidatingReader.GetAttribute("xsi:noNamespaceSchemaLocation");
+                                if (xsdName != null)
+                                {
+                                    listBox1.Items.Add(xsdName);
+                                    xsdPath = xmlPath.Replace("xml", "xsd");
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found)
+                            {
+                                throw new Exception();
+
+                            }
+                            else
+                            {
+                                rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
+                                rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
+
+                                box.Text = File.ReadAllText(xmlPath);
+                                tab.Controls.Add(box);
+                                focusedRichTextBox = box;
+                                HighLight.hLRTF(focusedRichTextBox);
+                                listBox1.Items.Add("XML file loaded");
+                            }
+
+
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show("invalid xsd path or not exist, validation failed");
+
+                            if (xsdFileDialog.ShowDialog() == DialogResult.OK)
+                            {
+                                if ((xsdStream = xsdFileDialog.OpenFile()) != null)
+                                {
+                                    xsdPath = xsdFileDialog.FileName;
+                                    //string xsdText = File.ReadAllText(xsdPath);
+                                    listBox1.Items.Add("XSD file loaded");
+                                }
+                            }
+                            xmlValidatingReader.Close();
+                            using (XmlReader xmlValidating = XmlReader.Create(xmlPath, rearderSettings))
+                            {
+
+                                rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
+                                rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
+                            }
+
+                            box.Text = File.ReadAllText(xmlPath);
+                            tab.Controls.Add(box);
+                            focusedRichTextBox = box;
+                            HighLight.hLRTF(focusedRichTextBox);
+                            listBox1.Items.Add("XML file loaded");
+                        }
+
+                    }
+                }
+            }*/
+            #endregion modified_file_open
+
+            if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                using (xmlStream = xmlFileDialog.OpenFile())
+                using (StreamReader sr = new StreamReader(xmlStream))
+                {
+                    if (xmlStream != null)
+                    {
+                        xmlPath = xmlFileDialog.FileName;
+                        RichTextBox box = new RichTextBox();
+                        box.Dock = DockStyle.Fill;
+                        TabPage tab = addTab(sender, xmlPath, me);
+
+                        box.Text = sr.ReadToEnd();
+
+                        //...........................................................................
+
+                        tab.Controls.Add(box);
+                        focusedRichTextBox = box;
+                        HighLight.hLRTF(focusedRichTextBox);
+                        listBox1.Items.Add("XML file loaded");
+                    }
+                }
+            }
+
+
+            //return isValid;
+        }
+
         private void saveOverride(object sender, EventArgs e)
         {
-            if (currentTab != null)
+            try
             {
-                
-                string path = currentTab.Tag.ToString();
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(focusedRichTextBox.Text);
-                doc.Save(path);
-                listBox1.Items.Add("File saved");
+                if (currentTab != null)
+                {
+
+                    string path = currentTab.Tag.ToString();
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(focusedRichTextBox.Text);
+                    doc.Save(path);
+                    listBox1.Items.Add("File saved");
+                }
+                else
+                {
+                    saveFileToolStripMenuItem_Click(sender, e);
+                }
             }
-            else
+            catch (XmlException xe)
             {
-                saveFileToolStripMenuItem_Click(sender, e);
+                listBox1.Items.Add("Invalid XML formation, can't save");
             }
         }
 
@@ -330,12 +295,17 @@ namespace XML_Editor
             a.Show();
         }
 
-        private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
+        /*private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Control == true && e.KeyCode == Keys.S)
+            if (e.Control == true && e.KeyCode == Keys.S)
             {
                 saveFileToolStripMenuItem.PerformClick();
             }
+        }*/
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         private void FontSizeOption_Click(object sender, EventArgs e)
@@ -348,11 +318,119 @@ namespace XML_Editor
                 focusedRichTextBox.Font = fd.Font;
             }
         }
-        #endregion File
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void newXMLFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            var lastIndex = this.tabControl1.TabCount - 1;
+            TabPage myTabPage = new TabPage("New Tab");
+            RichTextBox box = new RichTextBox();
+            box.Dock = DockStyle.Fill;
+            myTabPage.Controls.Add(box);
+            tabControl1.TabPages.Insert(lastIndex, myTabPage);
+            this.tabControl1.SelectedIndex = lastIndex;
         }
+
+        private void validationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string xmlPath = currentTab.Tag.ToString();
+                Stream xsdStream;
+                string xsdPath = "";
+                _issueCounter = 0;
+                OpenFileDialog xsdFileDialog = new OpenFileDialog();
+                xsdFileDialog.Filter = "XSD files (*.xsd)|*.xsd";
+                _validationComments = new List<string>();
+                try
+                {
+                    XmlReaderSettings rearderSettings = new XmlReaderSettings();
+                    rearderSettings.ValidationType = ValidationType.Schema;
+                    rearderSettings.ValidationFlags |=
+                      XmlSchemaValidationFlags.ProcessSchemaLocation |
+                      XmlSchemaValidationFlags.ReportValidationWarnings |
+                      XmlSchemaValidationFlags.ProcessIdentityConstraints |
+                      XmlSchemaValidationFlags.AllowXmlAttributes;
+
+                    if (xsdFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        if ((xsdStream = xsdFileDialog.OpenFile()) != null)
+                        {
+                            xsdPath = xsdFileDialog.FileName;
+                            string xsdText = File.ReadAllText(xsdPath);
+                            listBox1.Items.Add("XSD file loaded");
+                        }
+                    }
+                    rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
+                    rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
+                    using (XmlReader xmlValidatingReader = XmlReader.Create(xmlPath, rearderSettings))
+                    {
+                        while (xmlValidatingReader.Read())
+                        {
+                            //box.Text = xmlValidatingReader.ReadOuterXml();
+                        }
+
+                    }
+
+                }
+                catch (Exception error)
+                {
+                    //isValid = false;
+                    listBox1.Items.Add("Exception " + error.Message);
+                }
+
+                Validation.ValidationReport(System.IO.Path.GetFileName(xmlPath), listBox1, _issueCounter, _validationComments);
+            }
+            catch (Exception ex)
+            {
+                listBox1.Items.Add("You tried...");
+                listBox1.Items.Add("Good luck next time...");
+            }
+        }
+        #endregion Menu
+
+        #region Indenter
+        private string xmlIndenter(int whiteSpace, string xml)
+        {
+            int counter = 2;
+            string whiteSp = "  ";
+
+            while (counter != whiteSpace)
+            {
+                counter++;
+                whiteSp += " ";
+            }
+
+            var stringBuilder = new StringBuilder();
+
+            var element = XElement.Parse(xml);
+
+            var settings = new XmlWriterSettings();
+            settings.OmitXmlDeclaration = false;
+            settings.Indent = true;
+            settings.IndentChars = whiteSp;
+            settings.NewLineOnAttributes = true;
+
+
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, settings))
+            {
+                element.Save(xmlWriter);
+            }
+
+            return stringBuilder.ToString();
+        }
+
+        private void IndentSize_Click(object sender, EventArgs e)
+        {
+            var itemText = (sender as ToolStripMenuItem).Text;
+            var intText = int.Parse(itemText);
+            var xml = focusedRichTextBox.Text;
+            focusedRichTextBox.Text = xmlIndenter(intText, xml);
+            HighLight.hLRTF(focusedRichTextBox);
+        }
+
+        #endregion Indenter
+
+        
     }
+        
 }
