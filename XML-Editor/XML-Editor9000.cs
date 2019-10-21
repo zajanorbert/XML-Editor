@@ -177,6 +177,9 @@ namespace XML_Editor
                             }
                         }
                         box.Text = File.ReadAllText(xmlPath);
+
+                        //...........................................................................
+
                         tab.Controls.Add(box);
                         focusedRichTextBox = box;
                         HighLight.hLRTF(focusedRichTextBox);
@@ -193,6 +196,24 @@ namespace XML_Editor
 
             Validation.ValidationReport(System.IO.Path.GetFileName(xmlPath), listBox1, _issueCounter, _validationComments);
             //return isValid;
+        }
+
+        private XmlWriterSettings xmlIndenter(int whiteSpace)
+        {
+            int counter = 2;
+            string whiteSp = "  ";
+
+            while (counter != whiteSpace)
+            {
+                counter++;
+                whiteSp += " ";
+            } 
+
+            XmlWriterSettings myXmlWriter = new XmlWriterSettings() 
+            {Indent = true, IndentChars = whiteSp, OmitXmlDeclaration = false};
+
+            return myXmlWriter;
+            
         }
 
 
