@@ -19,6 +19,7 @@ namespace XML_Editor
         private int _issueCounter;
         private List<string> _validationComments;
         private RichTextBox focusedRichTextBox;
+        private TabPage currentTab;
 
         public XMLEditor9000()
         {
@@ -37,7 +38,7 @@ namespace XML_Editor
 
         private void XMLEditor9000_Load(object sender, EventArgs e)
         {
-
+            focusedRichTextBox = richTextBox1;
         }
 
         private void openXMLFileToolStripMenuItem_Click_1(object sender, MouseEventArgs me)
@@ -184,6 +185,7 @@ namespace XML_Editor
                         focusedRichTextBox = box;
                         HighLight.hLRTF(focusedRichTextBox);
                         listBox1.Items.Add("XML file loaded");
+                        
                     }
                 }
 
@@ -207,16 +209,14 @@ namespace XML_Editor
             {
                 counter++;
                 whiteSp += " ";
-            } 
+            }
 
-            XmlWriterSettings myXmlWriter = new XmlWriterSettings() 
-            {Indent = true, IndentChars = whiteSp, OmitXmlDeclaration = false};
+            XmlWriterSettings myXmlWriter = new XmlWriterSettings()
+            { Indent = true, IndentChars = whiteSp, OmitXmlDeclaration = false };
 
             return myXmlWriter;
-            
+
         }
-
-
 
         private void XmlValidationEventHandler(object sender, ValidationEventArgs e)
         {
@@ -240,10 +240,9 @@ namespace XML_Editor
             var lastIndex = this.tabControl1.TabCount - 1;
             /*if (this.tabControl1.GetTabRect(lastIndex).Contains(me.Location))
             {*/
-            string dbf_File = System.IO.Path.GetFileName(strfilename);
-
-            string title = dbf_File;
+            string title = System.IO.Path.GetFileName(strfilename);
             TabPage myTabPage = new TabPage(title);
+            myTabPage.Tag = strfilename;
             tabControl1.TabPages.Insert(lastIndex, myTabPage);
             this.tabControl1.SelectedIndex = lastIndex;
             return myTabPage;
@@ -265,10 +264,16 @@ namespace XML_Editor
                 this.tabControl1.SelectedIndex = lastIndex;
             }
 
+            if (e.Button == MouseButtons.Middle)
+            {
+                closeTab(sender, e);
+            }
+
         }
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
+            currentTab = e.TabPage;
             if (e.TabPage.HasChildren)
             {
                 focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBox>().First();
@@ -277,6 +282,7 @@ namespace XML_Editor
         }
         #endregion tabcontrol
 
+        #region File
         private void saveFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -294,9 +300,27 @@ namespace XML_Editor
                 }
                 else
                 {
+
                     File.WriteAllText(saveFileDialog1.FileName, focusedRichTextBox.Text);
 
                 }
+            }
+        }
+
+        private void saveOverride(object sender, EventArgs e)
+        {
+            if (currentTab != null)
+            {
+                
+                string path = currentTab.Tag.ToString();
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(focusedRichTextBox.Text);
+                doc.Save(path);
+                listBox1.Items.Add("File saved");
+            }
+            else
+            {
+                saveFileToolStripMenuItem_Click(sender, e);
             }
         }
 
@@ -318,11 +342,17 @@ namespace XML_Editor
         {
             FontDialog fd = new FontDialog();
 
-            if(fd.ShowDialog() == DialogResult.OK)
+            if (fd.ShowDialog() == DialogResult.OK)
             {
                 listBox1.Font = fd.Font;
-                richTextBox1.Font = fd.Font;
+                focusedRichTextBox.Font = fd.Font;
             }
+        }
+        #endregion File
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

@@ -32,26 +32,26 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newXMLFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openXMLFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.validationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FontSizeOption = new System.Windows.Forms.ToolStripMenuItem();
+            this.indentSpaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.newTab = new System.Windows.Forms.TabPage();
-            this.richTextBox3 = new System.Windows.Forms.RichTextBox();
-            this.indentSpaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.newTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip2
@@ -73,7 +73,9 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newXMLFileToolStripMenuItem,
             this.openXMLFileToolStripMenuItem,
+            this.saveAsToolStripMenuItem,
             this.saveFileToolStripMenuItem,
+            this.validationToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -82,28 +84,46 @@
             // newXMLFileToolStripMenuItem
             // 
             this.newXMLFileToolStripMenuItem.Name = "newXMLFileToolStripMenuItem";
-            this.newXMLFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.newXMLFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.newXMLFileToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.newXMLFileToolStripMenuItem.Text = "New XML file";
             // 
             // openXMLFileToolStripMenuItem
             // 
             this.openXMLFileToolStripMenuItem.Name = "openXMLFileToolStripMenuItem";
-            this.openXMLFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.openXMLFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openXMLFileToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.openXMLFileToolStripMenuItem.Text = "Open XML file";
             this.openXMLFileToolStripMenuItem.MouseUp += new System.Windows.Forms.MouseEventHandler(this.openXMLFileToolStripMenuItem_Click_1);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.saveAsToolStripMenuItem.Text = "Save as ...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveFileToolStripMenuItem_Click);
             // 
             // saveFileToolStripMenuItem
             // 
             this.saveFileToolStripMenuItem.Name = "saveFileToolStripMenuItem";
-            this.saveFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.saveFileToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.saveFileToolStripMenuItem.Text = "Save file";
-            this.saveFileToolStripMenuItem.Click += new System.EventHandler(this.saveFileToolStripMenuItem_Click);
+            this.saveFileToolStripMenuItem.Click += new System.EventHandler(this.saveOverride);
+            // 
+            // validationToolStripMenuItem
+            // 
+            this.validationToolStripMenuItem.Name = "validationToolStripMenuItem";
+            this.validationToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+            this.validationToolStripMenuItem.Text = "Validation";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -123,9 +143,37 @@
             // FontSizeOption
             // 
             this.FontSizeOption.Name = "FontSizeOption";
-            this.FontSizeOption.Size = new System.Drawing.Size(180, 22);
+            this.FontSizeOption.Size = new System.Drawing.Size(142, 22);
             this.FontSizeOption.Text = "Font Size";
             this.FontSizeOption.Click += new System.EventHandler(this.FontSizeOption_Click);
+            // 
+            // indentSpaceToolStripMenuItem
+            // 
+            this.indentSpaceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3,
+            this.toolStripMenuItem4});
+            this.indentSpaceToolStripMenuItem.Name = "indentSpaceToolStripMenuItem";
+            this.indentSpaceToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.indentSpaceToolStripMenuItem.Text = "Indent Space";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(80, 22);
+            this.toolStripMenuItem2.Text = "2";
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(80, 22);
+            this.toolStripMenuItem3.Text = "4";
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(80, 22);
+            this.toolStripMenuItem4.Text = "6";
             // 
             // aboutToolStripMenuItem
             // 
@@ -183,50 +231,12 @@
             // 
             // newTab
             // 
-            this.newTab.Controls.Add(this.richTextBox3);
             this.newTab.Location = new System.Drawing.Point(4, 22);
             this.newTab.Name = "newTab";
             this.newTab.Size = new System.Drawing.Size(916, 350);
             this.newTab.TabIndex = 3;
             this.newTab.Text = "New Tab";
             this.newTab.UseVisualStyleBackColor = true;
-            // 
-            // richTextBox3
-            // 
-            this.richTextBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox3.Location = new System.Drawing.Point(0, 0);
-            this.richTextBox3.Name = "richTextBox3";
-            this.richTextBox3.Size = new System.Drawing.Size(916, 350);
-            this.richTextBox3.TabIndex = 1;
-            this.richTextBox3.Text = "";
-            // 
-            // indentSpaceToolStripMenuItem
-            // 
-            this.indentSpaceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4});
-            this.indentSpaceToolStripMenuItem.Name = "indentSpaceToolStripMenuItem";
-            this.indentSpaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.indentSpaceToolStripMenuItem.Text = "Indent Space";
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem2.Text = "2";
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem3.Text = "4";
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem4.Text = "6";
             // 
             // XMLEditor9000
             // 
@@ -246,7 +256,6 @@
             this.menuStrip2.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.newTab.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -266,13 +275,14 @@
         private System.Windows.Forms.ToolStripMenuItem newXMLFileToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.TabPage newTab;
-        private System.Windows.Forms.RichTextBox richTextBox3;
         private System.Windows.Forms.ToolStripMenuItem FontSizeOption;
         private System.Windows.Forms.ToolStripMenuItem indentSpaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem validationToolStripMenuItem;
+        private System.Windows.Forms.TabPage newTab;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
     }
 }
 
