@@ -45,7 +45,7 @@
             this.newTab = new System.Windows.Forms.TabPage();
             this.richTextBox3 = new System.Windows.Forms.RichTextBox();
             this.indentSpaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.IndentSize = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip2.SuspendLayout();
@@ -82,27 +82,27 @@
             // newXMLFileToolStripMenuItem
             // 
             this.newXMLFileToolStripMenuItem.Name = "newXMLFileToolStripMenuItem";
-            this.newXMLFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.newXMLFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newXMLFileToolStripMenuItem.Text = "New XML file";
             // 
             // openXMLFileToolStripMenuItem
             // 
             this.openXMLFileToolStripMenuItem.Name = "openXMLFileToolStripMenuItem";
-            this.openXMLFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.openXMLFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openXMLFileToolStripMenuItem.Text = "Open XML file";
             this.openXMLFileToolStripMenuItem.MouseUp += new System.Windows.Forms.MouseEventHandler(this.openXMLFileToolStripMenuItem_Click_1);
             // 
             // saveFileToolStripMenuItem
             // 
             this.saveFileToolStripMenuItem.Name = "saveFileToolStripMenuItem";
-            this.saveFileToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.saveFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveFileToolStripMenuItem.Text = "Save file";
             this.saveFileToolStripMenuItem.Click += new System.EventHandler(this.saveFileToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // editToolStripMenuItem
@@ -203,30 +203,33 @@
             // indentSpaceToolStripMenuItem
             // 
             this.indentSpaceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
+            this.IndentSize,
             this.toolStripMenuItem3,
             this.toolStripMenuItem4});
             this.indentSpaceToolStripMenuItem.Name = "indentSpaceToolStripMenuItem";
             this.indentSpaceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.indentSpaceToolStripMenuItem.Text = "Indent Space";
             // 
-            // toolStripMenuItem2
+            // IndentSize
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem2.Text = "2";
+            this.IndentSize.Name = "IndentSize";
+            this.IndentSize.Size = new System.Drawing.Size(180, 22);
+            this.IndentSize.Text = "2";
+            this.IndentSize.Click += new System.EventHandler(this.IndentSize_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem3.Text = "4";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.IndentSize_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
             this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem4.Text = "6";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.IndentSize_Click);
             // 
             // XMLEditor9000
             // 
@@ -270,7 +273,7 @@
         private System.Windows.Forms.RichTextBox richTextBox3;
         private System.Windows.Forms.ToolStripMenuItem FontSizeOption;
         private System.Windows.Forms.ToolStripMenuItem indentSpaceToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem IndentSize;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
     }

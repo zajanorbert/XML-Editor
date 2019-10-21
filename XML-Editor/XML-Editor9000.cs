@@ -198,25 +198,6 @@ namespace XML_Editor
             //return isValid;
         }
 
-        private XmlWriterSettings xmlIndenter(int whiteSpace)
-        {
-            int counter = 2;
-            string whiteSp = "  ";
-
-            while (counter != whiteSpace)
-            {
-                counter++;
-                whiteSp += " ";
-            } 
-
-            XmlWriterSettings myXmlWriter = new XmlWriterSettings() 
-            {Indent = true, IndentChars = whiteSp, OmitXmlDeclaration = false};
-
-            return myXmlWriter;
-            
-        }
-
-
 
         private void XmlValidationEventHandler(object sender, ValidationEventArgs e)
         {
@@ -227,6 +208,8 @@ namespace XML_Editor
               e.Exception.LinePosition,
               e.Message));
         }
+
+
 
         #region tabcontrol
         private void closeTab(object sender, EventArgs e)
@@ -289,13 +272,11 @@ namespace XML_Editor
                     using (StreamWriter sw = new StreamWriter(s))
                     {
                         sw.Write(focusedRichTextBox.Text);
-
                     }
                 }
                 else
                 {
                     File.WriteAllText(saveFileDialog1.FileName, focusedRichTextBox.Text);
-
                 }
             }
         }
@@ -323,6 +304,43 @@ namespace XML_Editor
                 listBox1.Font = fd.Font;
                 richTextBox1.Font = fd.Font;
             }
+        }
+
+        private string xmlIndenter(int whiteSpace, string xml)
+        {
+            int counter = 2;
+            string whiteSp = "  ";
+
+            while (counter != whiteSpace)
+            {
+                counter++;
+                whiteSp += " ";
+            }
+
+            var stringBuilder = new StringBuilder();
+
+            var element = XElement.Parse(xml);
+
+            var settings = new XmlWriterSettings();
+            settings.OmitXmlDeclaration = true;
+            settings.Indent = true;
+            settings.IndentChars = whiteSp;
+            settings.NewLineOnAttributes = true;
+
+            using (var xmlWriter = XmlWriter.Create(stringBuilder, settings))
+            {
+                element.Save(xmlWriter);
+            }
+
+            return stringBuilder.ToString();
+        }
+
+        private string IndentSize_Click(object sender, EventArgs e, string xml)
+        {
+            var itemText = (sender as ToolStripMenuItem).Text;
+            var intText = int.Parse(itemText);
+
+            return xmlIndenter(intText, xml);
         }
     }
 }
