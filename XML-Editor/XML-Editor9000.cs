@@ -299,6 +299,7 @@ namespace XML_Editor
 
             if(fd.ShowDialog() == DialogResult.OK)
             {
+                listBox1.Font = fd.Font;
                 richTextBox1.Font = fd.Font;
             }
         }
