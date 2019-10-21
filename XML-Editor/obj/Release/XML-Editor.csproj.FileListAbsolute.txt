@@ -1,9 +1,0 @@
-C:\Users\baszd\codecool\XML-Editor\XML-Editor\bin\Release\XML-Editor.exe.config
-C:\Users\baszd\codecool\XML-Editor\XML-Editor\bin\Release\XML-Editor.exe
-C:\Users\baszd\codecool\XML-Editor\XML-Editor\bin\Release\XML-Editor.pdb
-C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Release\XML-Editor.csprojAssemblyReference.cache
-C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Release\XML_Editor.Properties.Resources.resources
-C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Release\XML_Editor.XMLKönnyFakasztinátor.resources
-C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Release\XML-Editor.csproj.GenerateResource.cache
-C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Release\XML-Editor.exe
-C:\Users\baszd\codecool\XML-Editor\XML-Editor\obj\Release\XML-Editor.pdb
