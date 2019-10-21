@@ -322,10 +322,11 @@ namespace XML_Editor
             var element = XElement.Parse(xml);
 
             var settings = new XmlWriterSettings();
-            settings.OmitXmlDeclaration = true;
+            settings.OmitXmlDeclaration = false;
             settings.Indent = true;
             settings.IndentChars = whiteSp;
             settings.NewLineOnAttributes = true;
+            
 
             using (var xmlWriter = XmlWriter.Create(stringBuilder, settings))
             {
@@ -335,12 +336,13 @@ namespace XML_Editor
             return stringBuilder.ToString();
         }
 
-        private string IndentSize_Click(object sender, EventArgs e, string xml)
+        private void IndentSize_Click(object sender, EventArgs e)
         {
             var itemText = (sender as ToolStripMenuItem).Text;
             var intText = int.Parse(itemText);
-
-            return xmlIndenter(intText, xml);
+            var xml = focusedRichTextBox.Text;
+            focusedRichTextBox.Text = xmlIndenter(intText, xml);
+            HighLight.hLRTF(focusedRichTextBox);
         }
     }
 }
