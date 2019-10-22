@@ -506,7 +506,7 @@ namespace XML_Editor
             int beginPlace = focusedRichTextBox.SelectionStart - count;
             focusedRichTextBox.Select(beginPlace, count);
             focusedRichTextBox.SelectedText = "";
-            focusedRichTextBox.Text += autoText;
+            focusedRichTextBox.Text = focusedRichTextBox.Text.Insert(focusedRichTextBox.SelectionStart, autoText); ;
             focusedRichTextBox.Focus();
             listShow = false;
             listBox2.Hide();
