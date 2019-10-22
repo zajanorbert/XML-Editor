@@ -222,12 +222,13 @@
             this.tabControl1.TabIndex = 7;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             this.tabControl1.DoubleClick += new System.EventHandler(this.closeTab);
+            this.tabControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyDown);
             this.tabControl1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabControl1_MouseClick);
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.richTextBox2);
             this.tabPage1.Controls.Add(this.richTextBox1);
+            this.tabPage1.Controls.Add(this.richTextBox2);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Size = new System.Drawing.Size(916, 216);
@@ -239,12 +240,11 @@
             // 
             this.richTextBox1.AcceptsTab = true;
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox1.Location = new System.Drawing.Point(36, 0);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(916, 216);
+            this.richTextBox1.Size = new System.Drawing.Size(880, 216);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
-            this.richTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.richTextBox1_keyDown);
             // 
             // newTab
             // 
@@ -276,9 +276,11 @@
             // richTextBox2
             // 
             this.richTextBox2.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Left;
             this.richTextBox2.Location = new System.Drawing.Point(0, 0);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(30, 216);
+            this.richTextBox2.ReadOnly = true;
+            this.richTextBox2.Size = new System.Drawing.Size(36, 216);
             this.richTextBox2.TabIndex = 1;
             this.richTextBox2.Text = "";
             // 

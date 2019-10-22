@@ -30,8 +30,8 @@ namespace XML_Editor
                 rtb.Enter += richTextBox_Enter;
             }
 
+            #region link
             richTextBox1.Text = "Valami szar ";
-
             LinkLabel link = new LinkLabel();
             link.Text = "itt, ide kattincs";
             link.LinkClicked += DoShit;
@@ -43,6 +43,10 @@ namespace XML_Editor
                 this.richTextBox1.GetPositionFromCharIndex(this.richTextBox1.TextLength);
             this.richTextBox1.Controls.Add(link);
             this.richTextBox1.AppendText(link.Text + " na most jo te szajha?");
+            #endregion link
+            
+            focusedRichTextBox = richTextBox1;
+            lineNumbering();
         }
 
         private void DoShit(object sender, LinkLabelLinkClickedEventArgs e)
@@ -50,26 +54,11 @@ namespace XML_Editor
             Console.WriteLine("BUMMM {0}", e.Link.LinkData);
         }
 
-        void richTextBox_Enter(object sender, EventArgs e)
-        {
-            focusedRichTextBox = (RichTextBox)sender;
-        }
-
         private void XMLEditor9000_Load(object sender, EventArgs e)
         {
             focusedRichTextBox = richTextBox1;
         }
-
-        private void XmlValidationEventHandler(object sender, ValidationEventArgs e)
-        {
-            _issueCounter++;
-            _validationComments.Add(string.Format("{0} @ line {1} position {2}: {3} \r\n",
-              (e.Severity == XmlSeverityType.Error ? "ERROR" : "WARNING"),
-              e.Exception.LineNumber,
-              e.Exception.LinePosition,
-              e.Message));
-        }
-
+        
         #region tabcontrol
         private void closeTab(object sender, EventArgs e)
         {
@@ -98,14 +87,7 @@ namespace XML_Editor
             var lastIndex = this.tabControl1.TabCount - 1;
             if (this.tabControl1.GetTabRect(lastIndex).Contains(e.Location))
             {
-                TabPage myTabPage = new TabPage("New Tab");
-                RichTextBox box = new RichTextBox();
-                box.Dock = DockStyle.Fill;
-                box.Multiline = true;
-                box.AcceptsTab = true;
-                myTabPage.Controls.Add(box);
-                tabControl1.TabPages.Insert(lastIndex, myTabPage);
-                this.tabControl1.SelectedIndex = lastIndex;
+                makeNewTab(lastIndex);
             }
 
             if (e.Button == MouseButtons.Middle)
@@ -120,10 +102,22 @@ namespace XML_Editor
             currentTab = e.TabPage;
             if (e.TabPage.HasChildren)
             {
+                currentTab.Controls.Add(richTextBox2);
                 focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBox>().First();
                 HighLight.hLRTF(focusedRichTextBox);
             }
+            
+            richTextBox2.Text = "";
+            lineNumbering();
+            
+            
         }
+
+        private void tabControl1_KeyDown(object sender, KeyEventArgs e)
+        {
+            lineNumbering();
+        }
+
         #endregion tabcontrol
 
         #region Menu
@@ -156,90 +150,7 @@ namespace XML_Editor
             xmlFileDialog.Filter = "XML files (*.xml)|*.xml";
             bool isValid = false;
             string xmlPath = "";
-
-            #region modified_file_open
-            /*if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                if ((xmlStream = xmlFileDialog.OpenFile()) != null)
-                {
-                    //string title = "TabPage " + (tabControl1.TabCount + 1).ToString();
-
-                    RichTextBox box = new RichTextBox();
-                    box.Dock = DockStyle.Fill;
-                    xmlPath = xmlFileDialog.FileName;
-                    TabPage tab = addTab(sender, xmlPath, me);
-
-                    using (XmlReader xmlValidatingReader = XmlReader.Create(xmlPath, rearderSettings))
-                    {
-                        try
-                        {
-
-                            string xsdName;
-
-                            bool found = false;
-                            while (xmlValidatingReader.Read())
-                            {
-                                xsdName = xmlValidatingReader.GetAttribute("xsi:noNamespaceSchemaLocation");
-                                if (xsdName != null)
-                                {
-                                    listBox1.Items.Add(xsdName);
-                                    xsdPath = xmlPath.Replace("xml", "xsd");
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (!found)
-                            {
-                                throw new Exception();
-
-                            }
-                            else
-                            {
-                                rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
-                                rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
-
-                                box.Text = File.ReadAllText(xmlPath);
-                                tab.Controls.Add(box);
-                                focusedRichTextBox = box;
-                                HighLight.hLRTF(focusedRichTextBox);
-                                listBox1.Items.Add("XML file loaded");
-                            }
-
-
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show("invalid xsd path or not exist, validation failed");
-
-                            if (xsdFileDialog.ShowDialog() == DialogResult.OK)
-                            {
-                                if ((xsdStream = xsdFileDialog.OpenFile()) != null)
-                                {
-                                    xsdPath = xsdFileDialog.FileName;
-                                    //string xsdText = File.ReadAllText(xsdPath);
-                                    listBox1.Items.Add("XSD file loaded");
-                                }
-                            }
-                            xmlValidatingReader.Close();
-                            using (XmlReader xmlValidating = XmlReader.Create(xmlPath, rearderSettings))
-                            {
-
-                                rearderSettings.ValidationEventHandler += new ValidationEventHandler(XmlValidationEventHandler);
-                                rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
-                            }
-
-                            box.Text = File.ReadAllText(xmlPath);
-                            tab.Controls.Add(box);
-                            focusedRichTextBox = box;
-                            HighLight.hLRTF(focusedRichTextBox);
-                            listBox1.Items.Add("XML file loaded");
-                        }
-
-                    }
-                }
-            }*/
-            #endregion modified_file_open
-
+            
             if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 using (xmlStream = xmlFileDialog.OpenFile())
@@ -254,13 +165,17 @@ namespace XML_Editor
                         box.AcceptsTab = true;
                         TabPage tab = addTab(sender, xmlPath, me);
                         box.Text = sr.ReadToEnd();
+                        
+                        tab.Controls.Add(richTextBox2);
 
                         //...........................................................................
 
                         tab.Controls.Add(box);
+                        tab.Controls.SetChildIndex(box, 0);
                         focusedRichTextBox = box;
                         HighLight.hLRTF(focusedRichTextBox);
                         listBox1.Items.Add("XML file loaded");
+                        lineNumbering();
                     }
                 }
             }
@@ -326,12 +241,7 @@ namespace XML_Editor
         private void newXMLFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var lastIndex = this.tabControl1.TabCount - 1;
-            TabPage myTabPage = new TabPage("New Tab");
-            RichTextBox box = new RichTextBox();
-            box.Dock = DockStyle.Fill;
-            myTabPage.Controls.Add(box);
-            tabControl1.TabPages.Insert(lastIndex, myTabPage);
-            this.tabControl1.SelectedIndex = lastIndex;
+            makeNewTab(lastIndex);
         }
 
         private void validationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -392,7 +302,7 @@ namespace XML_Editor
         }
         #endregion Menu
 
-        #region Indenter
+        #region XMLStuffs
         private string xmlIndenter(int whiteSpace, string xml)
         {
             int counter = 2;
@@ -432,14 +342,25 @@ namespace XML_Editor
             HighLight.hLRTF(focusedRichTextBox);
         }
 
-        #endregion Indenter
-
-        private void richTextBox1_keyDown(object sender, KeyEventArgs e)
+        private void XmlValidationEventHandler(object sender, ValidationEventArgs e)
         {
+            _issueCounter++;
+            _validationComments.Add(string.Format("{0} @ line {1} position {2}: {3} \r\n",
+              (e.Severity == XmlSeverityType.Error ? "ERROR" : "WARNING"),
+              e.Exception.LineNumber,
+              e.Exception.LinePosition,
+              e.Message));
+        }
 
-            for (int i = 0; i <= richTextBox1.Lines.Count(); i++)
+        #endregion XMLStuffs
+
+        #region privateMethods
+
+        private void lineNumbering()
+        {
+            for (int i = 0; i <= focusedRichTextBox.Lines.Count(); i++)
             {
-                if (!(e.KeyCode == Keys.Back))
+                if (focusedRichTextBox.Text != "")
                 {
                     if (!richTextBox2.Text.Contains(i.ToString()))
                     {
@@ -452,6 +373,29 @@ namespace XML_Editor
                 }
             }
         }
+
+        private void makeNewTab(int lastIndex)
+        {
+            
+            TabPage myTabPage = new TabPage("New Tab");
+            RichTextBox box = new RichTextBox();
+            box.Dock = DockStyle.Fill;
+            box.Multiline = true;
+            box.AcceptsTab = true;
+            myTabPage.Controls.Add(box);
+            myTabPage.Controls.Add(richTextBox2);
+            myTabPage.Controls.SetChildIndex(box, 0);
+            tabControl1.TabPages.Insert(lastIndex, myTabPage);
+            this.tabControl1.SelectedIndex = lastIndex;
+            focusedRichTextBox = box;
+        }
+
+        private void richTextBox_Enter(object sender, EventArgs e)
+        {
+            focusedRichTextBox = (RichTextBox)sender;
+        }
+
+        #endregion privateMethods
     }
-        
+
 }
