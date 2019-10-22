@@ -33,7 +33,8 @@ namespace XML_Editor
             {
                 rtb.Enter += richTextBox_Enter;
             }
-            
+
+            button1.Text = "\uD83D\uDDD1";
 
             #region link
             richTextBox1.Text = "Valami szar ";
@@ -71,7 +72,7 @@ namespace XML_Editor
                 tabControl1.TabPages.Remove(tabControl1.SelectedTab);
         }
 
-        private TabPage addTab(object sender, string strfilename, MouseEventArgs me)
+        private TabPage addTab(string strfilename)
         {
             var lastIndex = this.tabControl1.TabCount - 1;
             /*if (this.tabControl1.GetTabRect(lastIndex).Contains(me.Location))
@@ -99,17 +100,23 @@ namespace XML_Editor
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
+            listBox2.Items.Clear();
             currentTab = e.TabPage;
             if (e.TabPage.HasChildren)
             {
+
                 currentTab.Controls.Add(richTextBox2);
                 focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBox>().First();
+                if(focusedRichTextBox.Text != "")
+                {
+                    elementGetter();
+                }
+                
                 HighLight.hLRTF(focusedRichTextBox);
             }
 
             richTextBox2.Text = "";
             lineNumbering();
-
 
         }
 
@@ -197,18 +204,41 @@ namespace XML_Editor
             saveFileDialog1.Filter = "XML files (*.xml)|*.xml";
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (saveFileDialog1.CheckFileExists)
+                try
                 {
-                    using (Stream s = File.Open(saveFileDialog1.FileName, FileMode.CreateNew))
-                    using (StreamWriter sw = new StreamWriter(s))
+                    if (saveFileDialog1.CheckFileExists)
                     {
-                        sw.Write(focusedRichTextBox.Text);
+                        using (Stream s = File.Open(saveFileDialog1.FileName, FileMode.CreateNew))
+                        using (StreamWriter sw = new StreamWriter(s))
+                        {
+                            XmlDocument doc = new XmlDocument();
+                            doc.LoadXml(focusedRichTextBox.Text);
+                            doc.Save(saveFileDialog1.FileName);
+                            //sw.Write(focusedRichTextBox.Text);
+                            string filename = System.IO.Path.GetFileName(saveFileDialog1.FileName);
+                            listBox1.Items.Add(filename + " saved");
+                            currentTab.Tag = saveFileDialog1.FileName;
+                            currentTab.Text = filename;
+                        }
+
+
+                    }
+                    else
+                    {
+
+                        //File.WriteAllText(saveFileDialog1.FileName, focusedRichTextBox.Text);
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(focusedRichTextBox.Text);
+                        doc.Save(saveFileDialog1.FileName);
+                        string filename = System.IO.Path.GetFileName(saveFileDialog1.FileName);
+                        listBox1.Items.Add(filename + " saved");
+                        currentTab.Tag = saveFileDialog1.FileName;
+                        currentTab.Text = filename;
                     }
                 }
-                else
+                catch (XmlException xe)
                 {
-
-                    File.WriteAllText(saveFileDialog1.FileName, focusedRichTextBox.Text);
+                    listBox1.Items.Add("Invalid XML formation, can't save");
                 }
             }
         }
@@ -220,34 +250,44 @@ namespace XML_Editor
             xmlFileDialog.Filter = "XML files (*.xml)|*.xml";
             bool isValid = false;
             string xmlPath = "";
-
-            if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            try
             {
-                using (xmlStream = xmlFileDialog.OpenFile())
-                using (StreamReader sr = new StreamReader(xmlStream))
+                if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    if (xmlStream != null)
+                    using (xmlStream = xmlFileDialog.OpenFile())
+                    using (StreamReader sr = new StreamReader(xmlStream))
                     {
-                        xmlPath = xmlFileDialog.FileName;
-                        RichTextBox box = new RichTextBox();
-                        box.Dock = DockStyle.Fill;
-                        box.Multiline = true;
-                        box.AcceptsTab = true;
-                        TabPage tab = addTab(sender, xmlPath, me);
-                        box.Text = sr.ReadToEnd();
+                        if (xmlStream != null)
+                        {
+                            xmlPath = xmlFileDialog.FileName;
+                            RichTextBox box = new RichTextBox();
+                            box.Dock = DockStyle.Fill;
+                            box.Multiline = true;
+                            box.AcceptsTab = true;
+                            box.Text = sr.ReadToEnd();
+                            Console.WriteLine(box.Text);
+                            XDocument doc = XDocument.Parse(box.Text);
+                            TabPage tab = addTab(xmlPath);
+                            foreach (var name in doc.Root.DescendantNodes().OfType<XElement>().Select(x => x.Name).Distinct())
+                            {
+                                listBox2.Items.Add(name);
+                            }
+                            tab.Controls.Add(richTextBox2);
 
-                        tab.Controls.Add(richTextBox2);
+                            //...........................................................................
 
-                        //...........................................................................
-
-                        tab.Controls.Add(box);
-                        tab.Controls.SetChildIndex(box, 0);
-                        focusedRichTextBox = box;
-                        HighLight.hLRTF(focusedRichTextBox);
-                        listBox1.Items.Add("XML file loaded");
-                        lineNumbering();
+                            tab.Controls.Add(box);
+                            tab.Controls.SetChildIndex(box, 0);
+                            focusedRichTextBox = box;
+                            HighLight.hLRTF(focusedRichTextBox);
+                            listBox1.Items.Add("XML file loaded");
+                            lineNumbering();
+                        }
                     }
                 }
+            }catch(XmlException xe)
+            {
+                listBox1.Items.Add("Invalid XML formation, can't load");
             }
 
 
@@ -258,7 +298,7 @@ namespace XML_Editor
         {
             try
             {
-                if (currentTab != null)
+                if (currentTab.Tag != null)
                 {
 
                     string path = currentTab.Tag.ToString();
@@ -288,6 +328,7 @@ namespace XML_Editor
         {
             if (listShow == true) //[COLOR =#000080]/*Section 1*/[/COLOR]
             {
+
                 keyword += '<';
                 count++;
                 Point point = this.focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
@@ -298,21 +339,32 @@ namespace XML_Editor
                 listBox2.SelectedIndex = 0;
                 listBox2.SelectedIndex = listBox2.FindString(keyword);
                 focusedRichTextBox.Focus();
+
+
             }
 
             if ((e.Control == true && e.KeyCode == Keys.Space)) //[COLOR =#000080]/*Section 2*/[/COLOR]
             {
+                try
+                {
+                    listShow = true;
+                    Point point = this.focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
+                    point.Y += (int)Math.Ceiling(this.focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
+                    point.X += 105; //105 is the .x postion of the richtectbox
+                    listBox2.Location = point;
+                    count++;
+                    listBox2.Show();
+                    listBox2.SelectedIndex = 0;
+                    listBox2.SelectedIndex = listBox2.FindString(keyword);
+                    focusedRichTextBox.Focus();
 
-                listShow = true;
-                Point point = this.focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
-                point.Y += (int)Math.Ceiling(this.focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
-                point.X += 105; //105 is the .x postion of the richtectbox
-                listBox2.Location = point;
-                count++;
-                listBox2.Show();
-                listBox2.SelectedIndex = 0;
-                listBox2.SelectedIndex = listBox2.FindString(keyword);
-                focusedRichTextBox.Focus();
+                }
+                catch (Exception ex)
+                {
+                    listBox1.Items.Add("No love in your life. Go home and die! <3");
+                    listBox2.Hide();
+                    listShow = false;
+                }
 
             }
         }
@@ -410,7 +462,7 @@ namespace XML_Editor
             }
 
             var stringBuilder = new StringBuilder();
-            
+
             try
             {
                 var element = XElement.Parse(xml);
@@ -426,11 +478,11 @@ namespace XML_Editor
                     element.Save(xmlWriter);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 listBox1.Items.Add(ex.Message);
             }
-            
+
 
             return stringBuilder.ToString();
         }
@@ -452,6 +504,31 @@ namespace XML_Editor
               e.Exception.LineNumber,
               e.Exception.LinePosition,
               e.Message));
+        }
+
+        private void listBox2_DoubleClick(object sender, EventArgs e)
+        {
+            listBox2.Focus();
+            string autoText = string.Format("<{0}></{0}>", listBox2.SelectedItem.ToString());
+            int beginPlace = focusedRichTextBox.SelectionStart - count;
+            try
+            {
+                focusedRichTextBox.Select(beginPlace, count);
+                focusedRichTextBox.SelectedText = "";
+                focusedRichTextBox.Text = focusedRichTextBox.Text.Insert(focusedRichTextBox.SelectionStart, autoText); ;
+                focusedRichTextBox.Focus();
+            }
+            catch (Exception ex)
+            {
+                listBox1.Items.Add("You forgot modify your other xml. Now you can modify this");
+            }
+            listShow = false;
+            listBox2.Hide();
+            int endPlace = autoText.Length + beginPlace;
+            focusedRichTextBox.SelectionStart = endPlace;
+            count = 0;
+            HighLight.hLRTF(focusedRichTextBox);
+            focusedRichTextBox.Focus();
         }
 
         #endregion XMLStuffs
@@ -497,23 +574,20 @@ namespace XML_Editor
             focusedRichTextBox = (RichTextBox)sender;
         }
 
-        #endregion privateMethods
-        
-        private void listBox2_DoubleClick(object sender, EventArgs e)
+        private void elementGetter()
         {
-            listBox2.Focus();
-            string autoText = string.Format("<{0}></{0}>", listBox2.SelectedItem.ToString());
-            int beginPlace = focusedRichTextBox.SelectionStart - count;
-            focusedRichTextBox.Select(beginPlace, count);
-            focusedRichTextBox.SelectedText = "";
-            focusedRichTextBox.Text = focusedRichTextBox.Text.Insert(focusedRichTextBox.SelectionStart, autoText); ;
-            focusedRichTextBox.Focus();
-            listShow = false;
-            listBox2.Hide();
-            int endPlace = autoText.Length + beginPlace;
-            focusedRichTextBox.SelectionStart = endPlace;
-            count = 0;
-            focusedRichTextBox.Focus();
+            
+            XDocument doc = XDocument.Parse(focusedRichTextBox.Text);
+            foreach (var name in doc.Root.DescendantNodes().OfType<XElement>().Select(x => x.Name).Distinct())
+            {
+                listBox2.Items.Add(name);
+            }
+        }
+        #endregion privateMethods
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            listBox1.Items.Clear();
         }
     }
 }

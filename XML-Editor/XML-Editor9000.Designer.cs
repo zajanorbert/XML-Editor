@@ -52,6 +52,7 @@
             this.newTab = new System.Windows.Forms.TabPage();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -275,16 +276,6 @@
             // 
             this.listBox2.AccessibleRole = System.Windows.Forms.AccessibleRole.MenuPopup;
             this.listBox2.FormattingEnabled = true;
-            this.listBox2.Items.AddRange(new object[] {
-            "szavak",
-            "lol",
-            "asd",
-            "random",
-            "norbieszik.exe",
-            "túró tészta",
-            "szédülök",
-            "fáj a fejem",
-            "tuszin robi"});
             this.listBox2.Location = new System.Drawing.Point(694, 0);
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(138, 82);
@@ -306,10 +297,21 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.button1);
             this.splitContainer1.Panel2.Controls.Add(this.listBox1);
             this.splitContainer1.Size = new System.Drawing.Size(924, 485);
             this.splitContainer1.SplitterDistance = 242;
             this.splitContainer1.TabIndex = 8;
+            // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button1.Location = new System.Drawing.Point(0, 216);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(924, 23);
+            this.button1.TabIndex = 3;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // XMLEditor9000
             // 
@@ -363,6 +365,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.Button button1;
     }
 }
 
