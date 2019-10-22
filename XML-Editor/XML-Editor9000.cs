@@ -20,6 +20,10 @@ namespace XML_Editor
         private List<string> _validationComments;
         private RichTextBox focusedRichTextBox;
         private TabPage currentTab;
+        private bool listShow = false;
+        private string keyword = "<";
+        private int count = 0;
+
 
 
         public XMLEditor9000()
@@ -29,7 +33,7 @@ namespace XML_Editor
             {
                 rtb.Enter += richTextBox_Enter;
             }
-            richTextBox3.Hide();
+            
 
             #region link
             richTextBox1.Text = "Valami szar ";
@@ -91,11 +95,6 @@ namespace XML_Editor
                 makeNewTab(lastIndex);
             }
 
-            if (e.Button == MouseButtons.Middle)
-            {
-                closeTab(sender, e);
-            }
-
         }
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
@@ -117,6 +116,76 @@ namespace XML_Editor
         private void tabControl1_KeyDown(object sender, KeyEventArgs e)
         {
             lineNumbering();
+            if (e.KeyCode == Keys.Enter) //[COLOR = red]/*Section 1*/[/ COLOR]
+            {
+                count = 0;
+                keyword = "<";
+                listShow = false;
+                listBox2.Hide();
+
+            }
+            if (e.Control == false && e.KeyCode == Keys.Space)
+            {
+                count = 0;
+                keyword = "<";
+                listShow = false;
+                listBox2.Hide();
+            }
+
+            if (listShow == true) //[COLOR =#ff0000]/*Section 2*/[/COLOR]
+            {
+
+                if (e.KeyCode == Keys.Up)
+                {
+                    listBox2.Focus();
+                    if (listBox2.SelectedIndex > 0)
+                    {
+                        listBox2.SelectedIndex -= 1;
+                    }
+                    else
+                    {
+                        listBox2.SelectedIndex = 0;
+                    }
+                    focusedRichTextBox.Focus();
+
+                }
+                else if (e.KeyCode == Keys.Down)
+                {
+
+                    listBox2.Focus();
+                    try
+                    {
+                        listBox2.SelectedIndex += 1;
+                    }
+                    catch
+                    {
+                    }
+                    focusedRichTextBox.Focus();
+                }
+                else if ((e.KeyCode == Keys.Enter))
+                {
+
+                    listBox2.Focus();
+                    string autoText = string.Format("<{0}></{0}>", listBox2.SelectedItem.ToString());
+                    int beginPlace = focusedRichTextBox.SelectionStart - count;
+                    focusedRichTextBox.Select(beginPlace, count);
+                    focusedRichTextBox.SelectedText = "";
+                    focusedRichTextBox.Text += autoText;
+                    focusedRichTextBox.Focus();
+                    listShow = false;
+                    listBox2.Hide();
+                    int endPlace = autoText.Length + beginPlace;
+                    focusedRichTextBox.SelectionStart = endPlace;
+                    count = 0;
+                    focusedRichTextBox.Focus();
+                }
+                else if (e.KeyCode == Keys.Escape)
+                {
+                    listBox2.Hide();
+                    listShow = false;
+                    focusedRichTextBox.Focus();
+                }
+            }
         }
 
         #endregion tabcontrol
@@ -215,13 +284,38 @@ namespace XML_Editor
             a.Show();
         }
 
-        /*private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
+        private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control == true && e.KeyCode == Keys.S)
+            if (listShow == true) //[COLOR =#000080]/*Section 1*/[/COLOR]
             {
-                saveFileToolStripMenuItem.PerformClick();
+                keyword += '<';
+                count++;
+                Point point = this.focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
+                point.Y += (int)Math.Ceiling(this.focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
+                point.X += 105; //105 is the .x postion of the richtectbox
+                listBox2.Location = point;
+                listBox2.Show();
+                listBox2.SelectedIndex = 0;
+                listBox2.SelectedIndex = listBox2.FindString(keyword);
+                focusedRichTextBox.Focus();
             }
-        }*/
+
+            if ((e.Control == true && e.KeyCode == Keys.Space)) //[COLOR =#000080]/*Section 2*/[/COLOR]
+            {
+
+                listShow = true;
+                Point point = this.focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
+                point.Y += (int)Math.Ceiling(this.focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
+                point.X += 105; //105 is the .x postion of the richtectbox
+                listBox2.Location = point;
+                count++;
+                listBox2.Show();
+                listBox2.SelectedIndex = 0;
+                listBox2.SelectedIndex = listBox2.FindString(keyword);
+                focusedRichTextBox.Focus();
+
+            }
+        }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -316,20 +410,27 @@ namespace XML_Editor
             }
 
             var stringBuilder = new StringBuilder();
-
-            var element = XElement.Parse(xml);
-
-            var settings = new XmlWriterSettings();
-            settings.OmitXmlDeclaration = false;
-            settings.Indent = true;
-            settings.IndentChars = whiteSp;
-            settings.NewLineOnAttributes = true;
-
-
-            using (var xmlWriter = XmlWriter.Create(stringBuilder, settings))
+            
+            try
             {
-                element.Save(xmlWriter);
+                var element = XElement.Parse(xml);
+                var settings = new XmlWriterSettings();
+                settings.OmitXmlDeclaration = false;
+                settings.Indent = true;
+                settings.IndentChars = whiteSp;
+                settings.NewLineOnAttributes = true;
+
+
+                using (var xmlWriter = XmlWriter.Create(stringBuilder, settings))
+                {
+                    element.Save(xmlWriter);
+                }
             }
+            catch(Exception ex)
+            {
+                listBox1.Items.Add(ex.Message);
+            }
+            
 
             return stringBuilder.ToString();
         }
@@ -397,7 +498,22 @@ namespace XML_Editor
         }
 
         #endregion privateMethods
-
+        
+        private void listBox2_DoubleClick(object sender, EventArgs e)
+        {
+            listBox2.Focus();
+            string autoText = string.Format("<{0}></{0}>", listBox2.SelectedItem.ToString());
+            int beginPlace = focusedRichTextBox.SelectionStart - count;
+            focusedRichTextBox.Select(beginPlace, count);
+            focusedRichTextBox.SelectedText = "";
+            focusedRichTextBox.Text += autoText;
+            focusedRichTextBox.Focus();
+            listShow = false;
+            listBox2.Hide();
+            int endPlace = autoText.Length + beginPlace;
+            focusedRichTextBox.SelectionStart = endPlace;
+            count = 0;
+            focusedRichTextBox.Focus();
+        }
     }
-
 }

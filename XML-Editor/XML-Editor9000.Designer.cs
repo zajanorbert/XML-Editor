@@ -48,9 +48,10 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.newTab = new System.Windows.Forms.TabPage();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.newTab = new System.Windows.Forms.TabPage();
+            this.listBox2 = new System.Windows.Forms.ListBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.menuStrip2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -247,7 +248,19 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(880, 216);
             this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.TabStop = false;
             this.richTextBox1.Text = "";
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.richTextBox2.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.ReadOnly = true;
+            this.richTextBox2.Size = new System.Drawing.Size(36, 216);
+            this.richTextBox2.TabIndex = 1;
+            this.richTextBox2.Text = "";
             // 
             // newTab
             // 
@@ -257,6 +270,28 @@
             this.newTab.TabIndex = 3;
             this.newTab.Text = "New Tab";
             this.newTab.UseVisualStyleBackColor = true;
+            // 
+            // listBox2
+            // 
+            this.listBox2.AccessibleRole = System.Windows.Forms.AccessibleRole.MenuPopup;
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.Items.AddRange(new object[] {
+            "szavak",
+            "lol",
+            "asd",
+            "random",
+            "norbieszik.exe",
+            "túró tészta",
+            "szédülök",
+            "fáj a fejem",
+            "tuszin robi"});
+            this.listBox2.Location = new System.Drawing.Point(694, 0);
+            this.listBox2.Name = "listBox2";
+            this.listBox2.Size = new System.Drawing.Size(138, 82);
+            this.listBox2.TabIndex = 2;
+            this.listBox2.TabStop = false;
+            this.listBox2.Visible = false;
+            this.listBox2.DoubleClick += new System.EventHandler(this.listBox2_DoubleClick);
             // 
             // splitContainer1
             // 
@@ -276,22 +311,12 @@
             this.splitContainer1.SplitterDistance = 242;
             this.splitContainer1.TabIndex = 8;
             // 
-            // richTextBox2
-            // 
-            this.richTextBox2.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.richTextBox2.Location = new System.Drawing.Point(0, 0);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.ReadOnly = true;
-            this.richTextBox2.Size = new System.Drawing.Size(36, 216);
-            this.richTextBox2.TabIndex = 1;
-            this.richTextBox2.Text = "";
-            // 
             // XMLEditor9000
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(924, 509);
+            this.Controls.Add(this.listBox2);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -299,6 +324,7 @@
             this.Name = "XMLEditor9000";
             this.Text = "XMLEditor9000";
             this.Load += new System.EventHandler(this.XMLEditor9000_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.XMLEditor9000_KeyDown);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -336,6 +362,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.ListBox listBox2;
     }
 }
 
