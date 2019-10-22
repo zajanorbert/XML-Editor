@@ -50,6 +50,7 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.newTab = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.menuStrip2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -225,6 +226,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.richTextBox2);
             this.tabPage1.Controls.Add(this.richTextBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -242,6 +244,7 @@
             this.richTextBox1.Size = new System.Drawing.Size(916, 216);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
+            this.richTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.richTextBox1_keyDown);
             // 
             // newTab
             // 
@@ -269,6 +272,15 @@
             this.splitContainer1.Size = new System.Drawing.Size(924, 485);
             this.splitContainer1.SplitterDistance = 242;
             this.splitContainer1.TabIndex = 8;
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.richTextBox2.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.Size = new System.Drawing.Size(30, 216);
+            this.richTextBox2.TabIndex = 1;
+            this.richTextBox2.Text = "";
             // 
             // XMLEditor9000
             // 
@@ -318,6 +330,7 @@
         private System.Windows.Forms.TabPage newTab;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.RichTextBox richTextBox2;
     }
 }
 
