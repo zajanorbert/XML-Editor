@@ -20,7 +20,7 @@ namespace XML_Editor
         private List<string> _validationComments;
         private RichTextBox focusedRichTextBox;
         private TabPage currentTab;
-       
+
 
         public XMLEditor9000()
         {
@@ -29,6 +29,7 @@ namespace XML_Editor
             {
                 rtb.Enter += richTextBox_Enter;
             }
+            richTextBox3.Hide();
 
             #region link
             richTextBox1.Text = "Valami szar ";
@@ -44,7 +45,7 @@ namespace XML_Editor
             this.richTextBox1.Controls.Add(link);
             this.richTextBox1.AppendText(link.Text + " na most jo te szajha?");
             #endregion link
-            
+
             focusedRichTextBox = richTextBox1;
             lineNumbering();
         }
@@ -58,7 +59,7 @@ namespace XML_Editor
         {
             focusedRichTextBox = richTextBox1;
         }
-        
+
         #region tabcontrol
         private void closeTab(object sender, EventArgs e)
         {
@@ -106,11 +107,11 @@ namespace XML_Editor
                 focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBox>().First();
                 HighLight.hLRTF(focusedRichTextBox);
             }
-            
+
             richTextBox2.Text = "";
             lineNumbering();
-            
-            
+
+
         }
 
         private void tabControl1_KeyDown(object sender, KeyEventArgs e)
@@ -150,7 +151,7 @@ namespace XML_Editor
             xmlFileDialog.Filter = "XML files (*.xml)|*.xml";
             bool isValid = false;
             string xmlPath = "";
-            
+
             if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 using (xmlStream = xmlFileDialog.OpenFile())
@@ -165,7 +166,7 @@ namespace XML_Editor
                         box.AcceptsTab = true;
                         TabPage tab = addTab(sender, xmlPath, me);
                         box.Text = sr.ReadToEnd();
-                        
+
                         tab.Controls.Add(richTextBox2);
 
                         //...........................................................................
@@ -376,7 +377,7 @@ namespace XML_Editor
 
         private void makeNewTab(int lastIndex)
         {
-            
+
             TabPage myTabPage = new TabPage("New Tab");
             RichTextBox box = new RichTextBox();
             box.Dock = DockStyle.Fill;
@@ -396,6 +397,7 @@ namespace XML_Editor
         }
 
         #endregion privateMethods
+
     }
 
 }
