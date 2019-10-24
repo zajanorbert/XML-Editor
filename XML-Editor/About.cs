@@ -17,9 +17,12 @@ namespace XML_Editor
             InitializeComponent();
         }
 
-        private void About_Load(object sender, EventArgs e)
+        private void About_KeyDown_1(object sender, KeyEventArgs e)
         {
-
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.Hide();
+            }
         }
     }
 }
