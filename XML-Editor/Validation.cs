@@ -11,8 +11,7 @@ namespace XML_Editor
     {
         public static void ValidationReport(string fileName, ListBox listBox, int _issueCounter, List<string> _validationComments)
         {
-
-
+            
             listBox.Items.Add("|=======================================|");
             if (_issueCounter > 0)
             {

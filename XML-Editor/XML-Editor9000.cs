@@ -36,7 +36,7 @@ namespace XML_Editor
 
             button1.Text = "\uD83D\uDDD1";//kuka
             #region link
-            /*
+            
             richTextBox1.Text = "Valami szar ";
             LinkLabel link = new LinkLabel();
             link.Text = "itt, ide kattincs";
@@ -48,7 +48,7 @@ namespace XML_Editor
             link.Location =
                 this.richTextBox1.GetPositionFromCharIndex(this.richTextBox1.TextLength);
             this.richTextBox1.Controls.Add(link);
-            this.richTextBox1.AppendText(link.Text + " na most jo te szajha?");*/
+            this.richTextBox1.AppendText(link.Text + " na most jo te szajha?");
             #endregion link
             currentTab = tabPage1;
 
