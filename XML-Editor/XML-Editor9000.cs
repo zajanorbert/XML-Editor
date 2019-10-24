@@ -34,9 +34,9 @@ namespace XML_Editor
                 rtb.Enter += richTextBox_Enter;
             }
 
-            button1.Text = "\uD83D\uDDD1";
-
+            button1.Text = "\uD83D\uDDD1";//kuka
             #region link
+            /*
             richTextBox1.Text = "Valami szar ";
             LinkLabel link = new LinkLabel();
             link.Text = "itt, ide kattincs";
@@ -48,8 +48,9 @@ namespace XML_Editor
             link.Location =
                 this.richTextBox1.GetPositionFromCharIndex(this.richTextBox1.TextLength);
             this.richTextBox1.Controls.Add(link);
-            this.richTextBox1.AppendText(link.Text + " na most jo te szajha?");
+            this.richTextBox1.AppendText(link.Text + " na most jo te szajha?");*/
             #endregion link
+            currentTab = tabPage1;
 
             focusedRichTextBox = richTextBox1;
             lineNumbering();
@@ -62,7 +63,7 @@ namespace XML_Editor
 
         private void XMLEditor9000_Load(object sender, EventArgs e)
         {
-            focusedRichTextBox = richTextBox1;
+
         }
 
         #region tabcontrol
@@ -107,11 +108,11 @@ namespace XML_Editor
 
                 currentTab.Controls.Add(richTextBox2);
                 focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBox>().First();
-                if(focusedRichTextBox.Text != "")
+                if (focusedRichTextBox.Text != "")
                 {
                     elementGetter();
                 }
-                
+
                 HighLight.hLRTF(focusedRichTextBox);
             }
 
@@ -122,8 +123,17 @@ namespace XML_Editor
 
         private void tabControl1_KeyDown(object sender, KeyEventArgs e)
         {
+            if (!currentTab.Text.Contains("*"))
+            {
+                var oldText = currentTab.Text;
+                currentTab.Text = oldText + "*";
+            }
+
+            richTextBox2.Clear();
             lineNumbering();
-            if (e.KeyCode == Keys.Enter) //[COLOR = red]/*Section 1*/[/ COLOR]
+
+
+            if ((listShow == true )&& (e.KeyCode == Keys.Enter)) //[COLOR = red]/*Section 1*/[/ COLOR]
             {
                 count = 0;
                 keyword = "<";
@@ -238,6 +248,7 @@ namespace XML_Editor
                 }
                 catch (XmlException xe)
                 {
+                    Console.WriteLine(xe.Message);
                     listBox1.Items.Add("Invalid XML formation, can't save");
                 }
             }
@@ -248,7 +259,7 @@ namespace XML_Editor
             Stream xmlStream;
             OpenFileDialog xmlFileDialog = new OpenFileDialog();
             xmlFileDialog.Filter = "XML files (*.xml)|*.xml";
-            bool isValid = false;
+            //bool isValid = false;
             string xmlPath = "";
             try
             {
@@ -265,7 +276,7 @@ namespace XML_Editor
                             box.Multiline = true;
                             box.AcceptsTab = true;
                             box.Text = sr.ReadToEnd();
-                            Console.WriteLine(box.Text);
+
                             XDocument doc = XDocument.Parse(box.Text);
                             TabPage tab = addTab(xmlPath);
                             foreach (var name in doc.Root.DescendantNodes().OfType<XElement>().Select(x => x.Name).Distinct())
@@ -285,8 +296,10 @@ namespace XML_Editor
                         }
                     }
                 }
-            }catch(XmlException xe)
+            }
+            catch (XmlException xe)
             {
+                Console.WriteLine(xe.Message);
                 listBox1.Items.Add("Invalid XML formation, can't load");
             }
 
@@ -306,6 +319,7 @@ namespace XML_Editor
                     doc.LoadXml(focusedRichTextBox.Text);
                     doc.Save(path);
                     listBox1.Items.Add("File saved");
+                    currentTab.Text = System.IO.Path.GetFileName(path);
                 }
                 else
                 {
@@ -314,6 +328,7 @@ namespace XML_Editor
             }
             catch (XmlException xe)
             {
+                Console.WriteLine(xe.Message);
                 listBox1.Items.Add("Invalid XML formation, can't save");
             }
         }
@@ -361,7 +376,9 @@ namespace XML_Editor
                 }
                 catch (Exception ex)
                 {
-                    listBox1.Items.Add("No love in your life. Go home and die! <3");
+                    //listBox1.Items.Add("No love in your life. Go home and die! <3");
+                    Console.WriteLine(ex.Message);
+                    listBox1.Items.Add("Document doesn't contain node elements");
                     listBox2.Hide();
                     listShow = false;
                 }
@@ -443,8 +460,10 @@ namespace XML_Editor
             }
             catch (Exception ex)
             {
-                listBox1.Items.Add("You tried...");
-                listBox1.Items.Add("Good luck next time...");
+                Console.WriteLine(ex.Message);
+                /*listBox1.Items.Add("You tried...");
+                listBox1.Items.Add("Good luck next time...");*/
+                listBox1.Items.Add("Save the file before validation");
             }
         }
         #endregion Menu
@@ -520,6 +539,7 @@ namespace XML_Editor
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 listBox1.Items.Add("You forgot modify your other xml. Now you can modify this");
             }
             listShow = false;
@@ -537,7 +557,7 @@ namespace XML_Editor
 
         private void lineNumbering()
         {
-            for (int i = 0; i <= focusedRichTextBox.Lines.Count(); i++)
+            for (int i = 1; i <= focusedRichTextBox.Lines.Count(); i++)
             {
                 if (focusedRichTextBox.Text != "")
                 {
@@ -576,7 +596,7 @@ namespace XML_Editor
 
         private void elementGetter()
         {
-            
+
             XDocument doc = XDocument.Parse(focusedRichTextBox.Text);
             foreach (var name in doc.Root.DescendantNodes().OfType<XElement>().Select(x => x.Name).Distinct())
             {
