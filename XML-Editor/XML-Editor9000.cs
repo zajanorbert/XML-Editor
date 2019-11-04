@@ -18,11 +18,18 @@ namespace XML_Editor
     {
         private int _issueCounter;
         private List<string> _validationComments;
-        private RichTextBox focusedRichTextBox;
-        private TabPage currentTab;
+        private static RichTextBox focusedRichTextBox;
+        private static TabPage currentTab;
         private bool listShow = false;
         private string keyword = "<";
         private int count = 0;
+        private string currentxsd = null;
+        private bool isvalidated = false;
+        private List<int> lineNumbs;
+        private static TabControl staticTabcontrol;
+
+        private bool exitFlag = false;
+        private Timer myTimer = new Timer();
 
 
 
@@ -35,30 +42,39 @@ namespace XML_Editor
             }
 
             button1.Text = "\uD83D\uDDD1";//kuka
-            #region link
-            
-            richTextBox1.Text = "Valami szar ";
-            LinkLabel link = new LinkLabel();
-            link.Text = "itt, ide kattincs";
-            link.LinkClicked += DoShit;
-            LinkLabel.Link data = new LinkLabel.Link();
-            data.LinkData = @"C:\";
-            link.Links.Add(data);
-            link.AutoSize = true;
-            link.Location =
-                this.richTextBox1.GetPositionFromCharIndex(this.richTextBox1.TextLength);
-            this.richTextBox1.Controls.Add(link);
-            this.richTextBox1.AppendText(link.Text + " na most jo te szajha?");
-            #endregion link
+            newTab.Text = "\uD83D\uDC1C";//ant
             currentTab = tabPage1;
-
             focusedRichTextBox = richTextBox1;
             lineNumbering();
         }
 
-        private void DoShit(object sender, LinkLabelLinkClickedEventArgs e)
+        public static void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Console.WriteLine("BUMMM {0}", e.Link.LinkData);
+            Console.WriteLine("{0}", e.Link.LinkData);
+            string[] path = e.Link.LinkData.ToString().Split(';');
+
+            foreach (TabPage tab in staticTabcontrol.TabPages)
+            {
+
+
+                if (tab.Text.Equals(Path.GetFileName(path[0])))
+                {
+                    currentTab = tab;
+                    staticTabcontrol.SelectedTab = tab;
+                    focusedRichTextBox = tab.Controls.OfType<RichTextBox>().First();
+                    if (int.Parse(path[1]) > focusedRichTextBox.Lines.Count()) return;
+
+                    focusedRichTextBox.SelectionStart = focusedRichTextBox.Find(focusedRichTextBox.Lines[int.Parse(path[1])]);
+                    focusedRichTextBox.ScrollToCaret();
+                    int firstcharindex = focusedRichTextBox.GetFirstCharIndexOfCurrentLine();
+                    string currenttext = focusedRichTextBox.Lines[int.Parse(path[1])];
+                    focusedRichTextBox.Select(firstcharindex, currenttext.Length);
+                    focusedRichTextBox.SelectionBackColor = Color.YellowGreen;
+
+                }
+
+            }
+
         }
 
         private void XMLEditor9000_Load(object sender, EventArgs e)
@@ -71,6 +87,8 @@ namespace XML_Editor
         {
             if (!tabControl1.SelectedTab.Equals(newTab))
                 tabControl1.TabPages.Remove(tabControl1.SelectedTab);
+
+
         }
 
         private TabPage addTab(string strfilename)
@@ -97,33 +115,47 @@ namespace XML_Editor
                 makeNewTab(lastIndex);
             }
 
+
         }
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
             listBox2.Items.Clear();
             currentTab = e.TabPage;
+            Font fontSize = listBox1.Font;
             if (e.TabPage.HasChildren)
             {
-
+                richTextBox2.Text = "";
                 currentTab.Controls.Add(richTextBox2);
                 focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBox>().First();
                 if (focusedRichTextBox.Text != "")
                 {
                     elementGetter();
                 }
-
+                focusedRichTextBox.Font = fontSize;
                 HighLight.hLRTF(focusedRichTextBox);
             }
 
-            richTextBox2.Text = "";
+
+            currentxsd = null;
+            isvalidated = false;
             lineNumbering();
 
         }
 
         private void tabControl1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!currentTab.Text.Contains("*"))
+            if (e.Control == true && e.KeyCode == Keys.O)
+            {
+                openXMLFileToolStripMenuItem.PerformClick();
+            }
+
+            if ((!tabControl1.SelectedTab.Equals(newTab)) && (e.Control == true && e.KeyCode == Keys.W))
+            {
+                tabControl1.TabPages.Remove(tabControl1.SelectedTab);
+            }
+
+            if ((!currentTab.Text.Contains("*")) && (!tabControl1.SelectedTab.Equals(newTab)))
             {
                 var oldText = currentTab.Text;
                 currentTab.Text = oldText + "*";
@@ -133,7 +165,7 @@ namespace XML_Editor
             lineNumbering();
 
 
-            if ((listShow == true )&& (e.KeyCode == Keys.Enter)) //[COLOR = red]/*Section 1*/[/ COLOR]
+            if ((listShow == true) && (e.KeyCode == Keys.Enter)) //[COLOR = red]/*Section 1*/[/ COLOR]
             {
                 count = 0;
                 keyword = "<";
@@ -203,6 +235,7 @@ namespace XML_Editor
                     focusedRichTextBox.Focus();
                 }
             }
+
         }
 
         #endregion tabcontrol
@@ -254,13 +287,15 @@ namespace XML_Editor
             }
         }
 
-        private void openXMLFileToolStripMenuItem_Click_1(object sender, MouseEventArgs me)
+        private void openXMLFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Stream xmlStream;
             OpenFileDialog xmlFileDialog = new OpenFileDialog();
             xmlFileDialog.Filter = "XML files (*.xml)|*.xml";
             //bool isValid = false;
             string xmlPath = "";
+            richTextBox2.Text = "";
+            Font font = listBox1.Font;
             try
             {
                 if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -290,6 +325,8 @@ namespace XML_Editor
                             tab.Controls.Add(box);
                             tab.Controls.SetChildIndex(box, 0);
                             focusedRichTextBox = box;
+                            focusedRichTextBox.Font = font;
+
                             HighLight.hLRTF(focusedRichTextBox);
                             listBox1.Items.Add("XML file loaded");
                             lineNumbering();
@@ -341,13 +378,14 @@ namespace XML_Editor
 
         private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
         {
+
             if (listShow == true) //[COLOR =#000080]/*Section 1*/[/COLOR]
             {
 
                 keyword += '<';
                 count++;
-                Point point = this.focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
-                point.Y += (int)Math.Ceiling(this.focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
+                Point point = focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
+                point.Y += (int)Math.Ceiling(focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
                 point.X += 105; //105 is the .x postion of the richtectbox
                 listBox2.Location = point;
                 listBox2.Show();
@@ -358,13 +396,21 @@ namespace XML_Editor
 
             }
 
-            if ((e.Control == true && e.KeyCode == Keys.Space)) //[COLOR =#000080]/*Section 2*/[/COLOR]
+            if ((e.Control == true && e.KeyCode == Keys.Space)) //|| (e.Control == true && e.Alt == true && e.KeyCode == Keys.)) //[COLOR =#000080]/*Section 2*/[/COLOR]
             {
                 try
                 {
+                    if (focusedRichTextBox.Text == "")
+                    {
+                        listBox2.Items.Add("szavak");
+                        listBox2.Items.Add("asd");
+                        listBox2.Items.Add("random");
+                        listBox2.Items.Add("lol");
+                        listBox2.Items.Add("node");
+                    }
                     listShow = true;
-                    Point point = this.focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
-                    point.Y += (int)Math.Ceiling(this.focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
+                    Point point = focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
+                    point.Y += (int)Math.Ceiling(focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
                     point.X += 105; //105 is the .x postion of the richtectbox
                     listBox2.Location = point;
                     count++;
@@ -378,17 +424,27 @@ namespace XML_Editor
                 {
                     //listBox1.Items.Add("No love in your life. Go home and die! <3");
                     Console.WriteLine(ex.Message);
-                    listBox1.Items.Add("Document doesn't contain node elements");
+                    //listBox1.Items.Add("Document doesn't contain node elements");
+
                     listBox2.Hide();
                     listShow = false;
                 }
 
             }
+
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            DialogResult dialog = MessageBox.Show("Do you really want to close?", "Exit", MessageBoxButtons.YesNo);
+            if (dialog == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+            else if (dialog == DialogResult.No)
+            {
+                e.Equals(false);
+            }
         }
 
         private void FontSizeOption_Click(object sender, EventArgs e)
@@ -399,6 +455,12 @@ namespace XML_Editor
             {
                 listBox1.Font = fd.Font;
                 focusedRichTextBox.Font = fd.Font;
+                HighLight.hLRTF(focusedRichTextBox);
+                if (isvalidated)
+                {
+                    validationToolStripMenuItem.PerformClick();
+                }
+
             }
         }
 
@@ -410,15 +472,21 @@ namespace XML_Editor
 
         private void validationToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            focusedRichTextBox.SelectAll();
+            focusedRichTextBox.SelectionBackColor = Color.White;
+            focusedRichTextBox.DeselectAll();
             try
             {
                 string xmlPath = currentTab.Tag.ToString();
                 Stream xsdStream;
                 string xsdPath = "";
+
+
                 _issueCounter = 0;
                 OpenFileDialog xsdFileDialog = new OpenFileDialog();
                 xsdFileDialog.Filter = "XSD files (*.xsd)|*.xsd";
                 _validationComments = new List<string>();
+                lineNumbs = new List<int>();
                 try
                 {
                     XmlReaderSettings rearderSettings = new XmlReaderSettings();
@@ -428,14 +496,23 @@ namespace XML_Editor
                       XmlSchemaValidationFlags.ReportValidationWarnings |
                       XmlSchemaValidationFlags.ProcessIdentityConstraints |
                       XmlSchemaValidationFlags.AllowXmlAttributes;
-
-                    if (xsdFileDialog.ShowDialog() == DialogResult.OK)
+                    if (currentxsd != null)
                     {
-                        if ((xsdStream = xsdFileDialog.OpenFile()) != null)
+
+                        xsdPath = currentxsd;
+                    }
+                    else
+                    {
+                        if (xsdFileDialog.ShowDialog() == DialogResult.OK)
                         {
-                            xsdPath = xsdFileDialog.FileName;
-                            string xsdText = File.ReadAllText(xsdPath);
-                            listBox1.Items.Add("XSD file loaded");
+                            if ((xsdStream = xsdFileDialog.OpenFile()) != null)
+                            {
+                                xsdPath = xsdFileDialog.FileName;
+                                currentxsd = xsdPath;
+                                string xsdText = File.ReadAllText(xsdPath);
+                                listBox1.Items.Add("XSD file loaded");
+                                isvalidated = true;
+                            }
                         }
                     }
                     rearderSettings.Schemas.Add(null, XmlReader.Create(xsdPath));
@@ -456,7 +533,8 @@ namespace XML_Editor
                     listBox1.Items.Add("Exception " + error.Message);
                 }
 
-                Validation.ValidationReport(System.IO.Path.GetFileName(xmlPath), listBox1, _issueCounter, _validationComments);
+                staticTabcontrol = Validation.ValidationReport(tabControl1, Path.GetFileName(xmlPath), listBox1, _issueCounter, _validationComments, currentTab, lineNumbs);
+
             }
             catch (Exception ex)
             {
@@ -465,6 +543,7 @@ namespace XML_Editor
                 listBox1.Items.Add("Good luck next time...");*/
                 listBox1.Items.Add("Save the file before validation");
             }
+
         }
         #endregion Menu
 
@@ -513,6 +592,7 @@ namespace XML_Editor
             var xml = focusedRichTextBox.Text;
             focusedRichTextBox.Text = xmlIndenter(intText, xml);
             HighLight.hLRTF(focusedRichTextBox);
+
         }
 
         private void XmlValidationEventHandler(object sender, ValidationEventArgs e)
@@ -523,6 +603,7 @@ namespace XML_Editor
               e.Exception.LineNumber,
               e.Exception.LinePosition,
               e.Message));
+            lineNumbs.Add(e.Exception.LineNumber);
         }
 
         private void listBox2_DoubleClick(object sender, EventArgs e)
@@ -576,7 +657,7 @@ namespace XML_Editor
         private void makeNewTab(int lastIndex)
         {
 
-            TabPage myTabPage = new TabPage("New Tab");
+            TabPage myTabPage = new TabPage("Untitled");
             RichTextBox box = new RichTextBox();
             box.Dock = DockStyle.Fill;
             box.Multiline = true;
@@ -608,6 +689,24 @@ namespace XML_Editor
         private void button1_Click(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
+            listBox1.Controls.Clear();
         }
+
+        private void XMLEditor9000_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+            DialogResult dialog = MessageBox.Show("Do you really want to close?", "Exit", MessageBoxButtons.YesNo);
+            if (dialog == DialogResult.Yes)
+            {
+                //Application.Exit();
+                return;
+            }
+            else if (dialog == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+
+        }
+        
     }
 }

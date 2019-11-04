@@ -103,7 +103,7 @@
             this.openXMLFileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openXMLFileToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.openXMLFileToolStripMenuItem.Text = "Open XML file";
-            this.openXMLFileToolStripMenuItem.MouseUp += new System.Windows.Forms.MouseEventHandler(this.openXMLFileToolStripMenuItem_Click_1);
+            this.openXMLFileToolStripMenuItem.Click += new System.EventHandler(this.openXMLFileToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
@@ -218,9 +218,11 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.newTab);
+            this.tabControl1.Cursor = System.Windows.Forms.Cursors.Default;
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.ItemSize = new System.Drawing.Size(18, 18);
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Multiline = true;
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(924, 242);
@@ -232,22 +234,23 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.BackColor = System.Drawing.Color.Black;
             this.tabPage1.Controls.Add(this.richTextBox1);
             this.tabPage1.Controls.Add(this.richTextBox2);
+            this.tabPage1.ForeColor = System.Drawing.Color.White;
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Size = new System.Drawing.Size(916, 216);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Untitled";
-            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // richTextBox1
             // 
             this.richTextBox1.AcceptsTab = true;
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(36, 0);
+            this.richTextBox1.Location = new System.Drawing.Point(58, 0);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(880, 216);
+            this.richTextBox1.Size = new System.Drawing.Size(858, 216);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.TabStop = false;
             this.richTextBox1.Text = "";
@@ -259,7 +262,7 @@
             this.richTextBox2.Location = new System.Drawing.Point(0, 0);
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.ReadOnly = true;
-            this.richTextBox2.Size = new System.Drawing.Size(36, 216);
+            this.richTextBox2.Size = new System.Drawing.Size(58, 216);
             this.richTextBox2.TabIndex = 1;
             this.richTextBox2.Text = "";
             // 
@@ -269,7 +272,6 @@
             this.newTab.Name = "newTab";
             this.newTab.Size = new System.Drawing.Size(916, 216);
             this.newTab.TabIndex = 3;
-            this.newTab.Text = "New Tab";
             this.newTab.UseVisualStyleBackColor = true;
             // 
             // listBox2
@@ -325,7 +327,7 @@
             this.KeyPreview = true;
             this.Name = "XMLEditor9000";
             this.Text = "XMLEditor9000";
-            this.Load += new System.EventHandler(this.XMLEditor9000_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.XMLEditor9000_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.XMLEditor9000_KeyDown);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
@@ -346,7 +348,6 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.ToolStripMenuItem openXMLFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
@@ -366,6 +367,7 @@
         private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 
