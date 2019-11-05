@@ -46,10 +46,11 @@ namespace XML_Editor
             focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
             focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
             lineNumbering();
+            xmlHandler.createConfig();
         }
         private void XMLEditor9000_Load(object sender, EventArgs e)
         {
-
+           
         }
 
         private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
@@ -366,12 +367,13 @@ namespace XML_Editor
                             {
                                 listBox2.Items.Add(name);
                             }
+                            tab.Controls.Add(box);
+                            tab.Controls.SetChildIndex(box, 0);
                             tab.Controls.Add(richTextBox2);
 
                             //...........................................................................
 
-                            tab.Controls.Add(box);
-                            tab.Controls.SetChildIndex(box, 0);
+                            
                             focusedRichTextBox = box;
                             focusedRichTextBox.Font = font;
 
