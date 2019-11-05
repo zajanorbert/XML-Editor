@@ -11,6 +11,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using XML_Editor.Properties;
 
 namespace XML_Editor
 {
@@ -18,7 +19,7 @@ namespace XML_Editor
     {
         private int _issueCounter;
         private List<string> _validationComments;
-        private static RichTextBox focusedRichTextBox;
+        private static RichTextBoxSynchronizedScroll focusedRichTextBox;
         private static TabPage currentTab;
         private bool listShow = false;
         private string keyword = "<";
@@ -28,6 +29,10 @@ namespace XML_Editor
         private List<int> lineNumbs;
         private static TabControl staticTabcontrol;
 
+        
+        
+
+        #region XMLEditor9000
         public XMLEditor9000()
         {
             InitializeComponent();
@@ -35,48 +40,91 @@ namespace XML_Editor
             {
                 rtb.Enter += richTextBox_Enter;
             }
-
             button1.Text = "\uD83D\uDDD1";//kuka
             newTab.Text = "\uD83D\uDC1C";//ant
             currentTab = tabPage1;
+
             focusedRichTextBox = richTextBox1;
+            focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
+            focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
             lineNumbering();
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            Console.WriteLine(path);
+        }
+        private void XMLEditor9000_Load(object sender, EventArgs e)
+        {
+            
         }
 
-        public static void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
         {
-            Console.WriteLine("{0}", e.Link.LinkData);
-            string[] path = e.Link.LinkData.ToString().Split(';');
 
-            foreach (TabPage tab in staticTabcontrol.TabPages)
+            if (listShow == true) //[COLOR =#000080]/*Section 1*/[/COLOR]
             {
 
+                keyword += '<';
+                count++;
+                Point point = focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
+                point.Y += (int)Math.Ceiling(focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
+                point.X += 105; //105 is the .x postion of the richtectbox
+                listBox2.Location = point;
+                listBox2.Show();
+                listBox2.SelectedIndex = 0;
+                listBox2.SelectedIndex = listBox2.FindString(keyword);
+                focusedRichTextBox.Focus();
 
-                if (tab.Text.Equals(Path.GetFileName(path[0])))
+
+            }
+
+            if ((e.Control == true && e.KeyCode == Keys.Space)) //|| (e.Control == true && e.Alt == true && e.KeyCode == Keys.)) //[COLOR =#000080]/*Section 2*/[/COLOR]
+            {
+                try
                 {
-                    currentTab = tab;
-                    staticTabcontrol.SelectedTab = tab;
-                    focusedRichTextBox = tab.Controls.OfType<RichTextBox>().First();
-                    if (int.Parse(path[1]) > focusedRichTextBox.Lines.Count()) return;
+                    
+                    listShow = true;
+                    Point point = focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
+                    point.Y += (int)Math.Ceiling(focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
+                    point.X += 105; //105 is the .x postion of the richtectbox
+                    listBox2.Location = point;
+                    count++;
+                    listBox2.Show();
+                    listBox2.SelectedIndex = 0;
+                    listBox2.SelectedIndex = listBox2.FindString(keyword);
+                    focusedRichTextBox.Focus();
 
-                    focusedRichTextBox.SelectionStart = focusedRichTextBox.Find(focusedRichTextBox.Lines[int.Parse(path[1])]);
-                    focusedRichTextBox.ScrollToCaret();
-                    int firstcharindex = focusedRichTextBox.GetFirstCharIndexOfCurrentLine();
-                    string currenttext = focusedRichTextBox.Lines[int.Parse(path[1])];
-                    focusedRichTextBox.Select(firstcharindex, currenttext.Length);
-                    focusedRichTextBox.SelectionBackColor = Color.YellowGreen;
+                }
+                catch (Exception ex)
+                {
+                    //listBox1.Items.Add("No love in your life. Go home and die! <3");
+                    Console.WriteLine(ex.Message);
+                    //listBox1.Items.Add("Document doesn't contain node elements");
 
+                    listBox2.Hide();
+                    listShow = false;
                 }
 
             }
 
         }
 
-        private void XMLEditor9000_Load(object sender, EventArgs e)
+        private void XMLEditor9000_FormClosing(object sender, FormClosingEventArgs e)
         {
+
+            DialogResult dialog = MessageBox.Show("Do you really want to close?", "Exit", MessageBoxButtons.YesNo);
+            if (dialog == DialogResult.Yes)
+            {
+                //Application.Exit();
+                return;
+            }
+            else if (dialog == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
 
         }
 
+        #endregion XMLEditor9000
+  
         #region tabcontrol
         private void closeTab(object sender, EventArgs e)
         {
@@ -122,16 +170,25 @@ namespace XML_Editor
             {
                 richTextBox2.Text = "";
                 currentTab.Controls.Add(richTextBox2);
-                focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBox>().First();
-                if (focusedRichTextBox.Text != "")
+                focusedRichTextBox = e.TabPage.Controls.OfType<RichTextBoxSynchronizedScroll>().First();
+                try
                 {
-                    elementGetter();
+                    if (focusedRichTextBox.Text != "" && focusedRichTextBox.Lines.Length > 1)
+                    {
+                        elementGetter();
+                    }
+                }catch(XmlException xe)
+                {
+                    listBox1.Items.Add(xe.Message);
                 }
+                
+
                 focusedRichTextBox.Font = fontSize;
                 HighLight.hLRTF(focusedRichTextBox);
             }
 
-
+            focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
+            focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
             currentxsd = null;
             isvalidated = false;
             lineNumbering();
@@ -301,7 +358,7 @@ namespace XML_Editor
                         if (xmlStream != null)
                         {
                             xmlPath = xmlFileDialog.FileName;
-                            RichTextBox box = new RichTextBox();
+                            RichTextBoxSynchronizedScroll box = new RichTextBoxSynchronizedScroll();
                             box.Dock = DockStyle.Fill;
                             box.Multiline = true;
                             box.AcceptsTab = true;
@@ -321,6 +378,9 @@ namespace XML_Editor
                             tab.Controls.SetChildIndex(box, 0);
                             focusedRichTextBox = box;
                             focusedRichTextBox.Font = font;
+
+                            focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
+                            focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
 
                             HighLight.hLRTF(focusedRichTextBox);
                             listBox1.Items.Add("XML file loaded");
@@ -369,64 +429,6 @@ namespace XML_Editor
         {
             About a = new About();
             a.Show();
-        }
-
-        private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
-        {
-
-            if (listShow == true) //[COLOR =#000080]/*Section 1*/[/COLOR]
-            {
-
-                keyword += '<';
-                count++;
-                Point point = focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
-                point.Y += (int)Math.Ceiling(focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
-                point.X += 105; //105 is the .x postion of the richtectbox
-                listBox2.Location = point;
-                listBox2.Show();
-                listBox2.SelectedIndex = 0;
-                listBox2.SelectedIndex = listBox2.FindString(keyword);
-                focusedRichTextBox.Focus();
-
-
-            }
-
-            if ((e.Control == true && e.KeyCode == Keys.Space)) //|| (e.Control == true && e.Alt == true && e.KeyCode == Keys.)) //[COLOR =#000080]/*Section 2*/[/COLOR]
-            {
-                try
-                {
-                    if (focusedRichTextBox.Text == "")
-                    {
-                        listBox2.Items.Add("szavak");
-                        listBox2.Items.Add("asd");
-                        listBox2.Items.Add("random");
-                        listBox2.Items.Add("lol");
-                        listBox2.Items.Add("node");
-                    }
-                    listShow = true;
-                    Point point = focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
-                    point.Y += (int)Math.Ceiling(focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
-                    point.X += 105; //105 is the .x postion of the richtectbox
-                    listBox2.Location = point;
-                    count++;
-                    listBox2.Show();
-                    listBox2.SelectedIndex = 0;
-                    listBox2.SelectedIndex = listBox2.FindString(keyword);
-                    focusedRichTextBox.Focus();
-
-                }
-                catch (Exception ex)
-                {
-                    //listBox1.Items.Add("No love in your life. Go home and die! <3");
-                    Console.WriteLine(ex.Message);
-                    //listBox1.Items.Add("Document doesn't contain node elements");
-
-                    listBox2.Hide();
-                    listShow = false;
-                }
-
-            }
-
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -627,6 +629,35 @@ namespace XML_Editor
             focusedRichTextBox.Focus();
         }
 
+        public static void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Console.WriteLine("{0}", e.Link.LinkData);
+            string[] path = e.Link.LinkData.ToString().Split(';');
+
+            foreach (TabPage tab in staticTabcontrol.TabPages)
+            {
+
+
+                if (tab.Text.Equals(Path.GetFileName(path[0])))
+                {
+                    currentTab = tab;
+                    staticTabcontrol.SelectedTab = tab;
+                    focusedRichTextBox = tab.Controls.OfType<RichTextBoxSynchronizedScroll>().First();
+                    if (int.Parse(path[1]) > focusedRichTextBox.Lines.Count()) return;
+
+                    focusedRichTextBox.SelectionStart = focusedRichTextBox.Find(focusedRichTextBox.Lines[int.Parse(path[1])]);
+                    focusedRichTextBox.ScrollToCaret();
+                    int firstcharindex = focusedRichTextBox.GetFirstCharIndexOfCurrentLine();
+                    string currenttext = focusedRichTextBox.Lines[int.Parse(path[1])];
+                    focusedRichTextBox.Select(firstcharindex, currenttext.Length);
+                    focusedRichTextBox.SelectionBackColor = Color.YellowGreen;
+
+                }
+
+            }
+
+        }
+
         #endregion XMLStuffs
 
         #region privateMethods
@@ -651,34 +682,69 @@ namespace XML_Editor
 
         private void makeNewTab(int lastIndex)
         {
-
+            string xnode = "<?xml version=\"1.0\" encoding=\"UTF - 16\"?>";
             TabPage myTabPage = new TabPage("Untitled");
-            RichTextBox box = new RichTextBox();
+            RichTextBoxSynchronizedScroll box = new RichTextBoxSynchronizedScroll();
             box.Dock = DockStyle.Fill;
             box.Multiline = true;
             box.AcceptsTab = true;
+
+            
+
             myTabPage.Controls.Add(box);
             myTabPage.Controls.Add(richTextBox2);
             myTabPage.Controls.SetChildIndex(box, 0);
+            box.Text = xnode;
             tabControl1.TabPages.Insert(lastIndex, myTabPage);
             this.tabControl1.SelectedIndex = lastIndex;
             focusedRichTextBox = box;
+            focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
+            focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
+            listBox2.Items.Add("szavak");
+            listBox2.Items.Add("asd");
+            listBox2.Items.Add("random");
+            listBox2.Items.Add("lol");
+            listBox2.Items.Add("node");
         }
 
         private void richTextBox_Enter(object sender, EventArgs e)
         {
-            focusedRichTextBox = (RichTextBox)sender;
+            focusedRichTextBox = (RichTextBoxSynchronizedScroll)sender;
         }
 
         private void elementGetter()
         {
-
             XDocument doc = XDocument.Parse(focusedRichTextBox.Text);
             foreach (var name in doc.Root.DescendantNodes().OfType<XElement>().Select(x => x.Name).Distinct())
             {
-                listBox2.Items.Add(name);
+                
+                listBox2.Items.Add(name.LocalName);
             }
         }
+
+        private void FocusedRichTextBox_MouseWheel(object sender, MouseEventArgs e)
+        {
+            //((HandledMouseEventArgs)e).Handled = true;//disable default mouse wheel
+
+
+            Message msg = new Message
+            {
+                Msg = 0x115
+
+            };
+
+            if (e.Delta > 1)
+            {
+                msg.WParam = new IntPtr(0x0);
+            }
+            else
+            {
+                msg.WParam = new IntPtr(0x1);
+
+            }
+            scrollSyncTxtBox1_vScroll(msg);
+        }
+
         #endregion privateMethods
 
         private void button1_Click(object sender, EventArgs e)
@@ -687,21 +753,13 @@ namespace XML_Editor
             listBox1.Controls.Clear();
         }
 
-        private void XMLEditor9000_FormClosing(object sender, FormClosingEventArgs e)
+        private void scrollSyncTxtBox1_vScroll(Message msg)
         {
 
-            DialogResult dialog = MessageBox.Show("Do you really want to close?", "Exit", MessageBoxButtons.YesNo);
-            if (dialog == DialogResult.Yes)
-            {
-                //Application.Exit();
-                return;
-            }
-            else if (dialog == DialogResult.No)
-            {
-                e.Cancel = true;
-            }
-
+            msg.HWnd = richTextBox2.Handle;
+           // msg.WParam = new IntPtr(0x1);
+            //Console.WriteLine(msg.ToString());
+            richTextBox2.PubWndProc(ref msg);
         }
-        
     }
 }

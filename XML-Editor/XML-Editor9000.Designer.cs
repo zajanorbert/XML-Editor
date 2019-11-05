@@ -27,6 +27,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(XMLEditor9000));
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,12 +48,13 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.newTab = new System.Windows.Forms.TabPage();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.button1 = new System.Windows.Forms.Button();
+            this.richTextBox1 = new XML_Editor.RichTextBoxSynchronizedScroll();
+            this.richTextBox2 = new XML_Editor.RichTextBoxSynchronizedScroll();
+            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.menuStrip2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -60,6 +62,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip2
@@ -244,28 +247,6 @@
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Untitled";
             // 
-            // richTextBox1
-            // 
-            this.richTextBox1.AcceptsTab = true;
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(58, 0);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(858, 216);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.TabStop = false;
-            this.richTextBox1.Text = "";
-            // 
-            // richTextBox2
-            // 
-            this.richTextBox2.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.richTextBox2.Location = new System.Drawing.Point(0, 0);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.ReadOnly = true;
-            this.richTextBox2.Size = new System.Drawing.Size(58, 216);
-            this.richTextBox2.TabIndex = 1;
-            this.richTextBox2.Text = "";
-            // 
             // newTab
             // 
             this.newTab.Location = new System.Drawing.Point(4, 22);
@@ -316,6 +297,29 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // richTextBox1
+            // 
+            this.richTextBox1.AcceptsTab = true;
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox1.Location = new System.Drawing.Point(58, 0);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(858, 216);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.TabStop = false;
+            this.richTextBox1.Text = "";
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.richTextBox2.Location = new System.Drawing.Point(0, 0);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.ReadOnly = true;
+            this.richTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.richTextBox2.Size = new System.Drawing.Size(58, 216);
+            this.richTextBox2.TabIndex = 1;
+            this.richTextBox2.Text = "";
+            // 
             // XMLEditor9000
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -338,6 +342,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -355,7 +360,7 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.ToolStripMenuItem newXMLFileToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private RichTextBoxSynchronizedScroll richTextBox1;
         private System.Windows.Forms.ToolStripMenuItem FontSizeOption;
         private System.Windows.Forms.ToolStripMenuItem indentSpaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem IndentSize;
@@ -365,10 +370,11 @@
         private System.Windows.Forms.TabPage newTab;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.RichTextBox richTextBox2;
+        private RichTextBoxSynchronizedScroll richTextBox2;
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.BindingSource bindingSource1;
     }
 }
 
