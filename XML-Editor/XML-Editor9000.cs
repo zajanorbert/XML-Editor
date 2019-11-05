@@ -29,8 +29,8 @@ namespace XML_Editor
         private List<int> lineNumbs;
         private static TabControl staticTabcontrol;
 
-        
-        
+
+
 
         #region XMLEditor9000
         public XMLEditor9000()
@@ -49,11 +49,27 @@ namespace XML_Editor
             focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
             lineNumbering();
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            Console.WriteLine(path);
+            List<string> xmlPaths;
+            Stream xmlStream;
+            /*if (File.Exists(path + "\\config.xml"))
+            {
+
+                xmlPaths = loadConfigXML();
+                using (xmlStream = xmlFileDialog.OpenFile())
+                    foreach (string xmlPath in xmlPaths)
+                    {
+                        openXMLFile(xmlPath, xmlStream);
+                    }
+            }
+            else
+            {
+                createConfigXML();
+            }*/
+
         }
         private void XMLEditor9000_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
@@ -80,7 +96,7 @@ namespace XML_Editor
             {
                 try
                 {
-                    
+
                     listShow = true;
                     Point point = focusedRichTextBox.GetPositionFromCharIndex(focusedRichTextBox.SelectionStart);
                     point.Y += (int)Math.Ceiling(focusedRichTextBox.Font.GetHeight()) + 13; //13 is the .y postion of the richtectbox
@@ -124,7 +140,7 @@ namespace XML_Editor
         }
 
         #endregion XMLEditor9000
-  
+
         #region tabcontrol
         private void closeTab(object sender, EventArgs e)
         {
@@ -177,11 +193,12 @@ namespace XML_Editor
                     {
                         elementGetter();
                     }
-                }catch(XmlException xe)
+                }
+                catch (XmlException xe)
                 {
                     listBox1.Items.Add(xe.Message);
                 }
-                
+
 
                 focusedRichTextBox.Font = fontSize;
                 HighLight.hLRTF(focusedRichTextBox);
@@ -341,52 +358,22 @@ namespace XML_Editor
 
         private void openXMLFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Stream xmlStream;
+            Stream xmlStream = null;
             OpenFileDialog xmlFileDialog = new OpenFileDialog();
             xmlFileDialog.Filter = "XML files (*.xml)|*.xml";
             //bool isValid = false;
             string xmlPath = "";
             richTextBox2.Text = "";
-            Font font = listBox1.Font;
+
             try
             {
-                if (xmlFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (xmlFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    using (xmlStream = xmlFileDialog.OpenFile())
-                    using (StreamReader sr = new StreamReader(xmlStream))
-                    {
-                        if (xmlStream != null)
-                        {
-                            xmlPath = xmlFileDialog.FileName;
-                            RichTextBoxSynchronizedScroll box = new RichTextBoxSynchronizedScroll();
-                            box.Dock = DockStyle.Fill;
-                            box.Multiline = true;
-                            box.AcceptsTab = true;
-                            box.Text = sr.ReadToEnd();
+                    
+                    xmlPath = xmlFileDialog.FileName;
+                    //using (xmlStream = xmlFileDialog.OpenFile())
 
-                            XDocument doc = XDocument.Parse(box.Text);
-                            TabPage tab = addTab(xmlPath);
-                            foreach (var name in doc.Root.DescendantNodes().OfType<XElement>().Select(x => x.Name).Distinct())
-                            {
-                                listBox2.Items.Add(name);
-                            }
-                            tab.Controls.Add(richTextBox2);
-
-                            //...........................................................................
-
-                            tab.Controls.Add(box);
-                            tab.Controls.SetChildIndex(box, 0);
-                            focusedRichTextBox = box;
-                            focusedRichTextBox.Font = font;
-
-                            focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
-                            focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
-
-                            HighLight.hLRTF(focusedRichTextBox);
-                            listBox1.Items.Add("XML file loaded");
-                            lineNumbering();
-                        }
-                    }
+                    openXMLFile(xmlPath, xmlStream);
                 }
             }
             catch (XmlException xe)
@@ -688,9 +675,6 @@ namespace XML_Editor
             box.Dock = DockStyle.Fill;
             box.Multiline = true;
             box.AcceptsTab = true;
-
-            
-
             myTabPage.Controls.Add(box);
             myTabPage.Controls.Add(richTextBox2);
             myTabPage.Controls.SetChildIndex(box, 0);
@@ -717,7 +701,7 @@ namespace XML_Editor
             XDocument doc = XDocument.Parse(focusedRichTextBox.Text);
             foreach (var name in doc.Root.DescendantNodes().OfType<XElement>().Select(x => x.Name).Distinct())
             {
-                
+
                 listBox2.Items.Add(name.LocalName);
             }
         }
@@ -745,6 +729,44 @@ namespace XML_Editor
             scrollSyncTxtBox1_vScroll(msg);
         }
 
+        private void openXMLFile(string xmlPath, Stream xmlStream)
+        {
+            Font font = listBox1.Font;
+            using (StreamReader sr = new StreamReader(xmlPath))
+            {
+                /*if (xmlStream != null)
+                {*/
+                    RichTextBoxSynchronizedScroll box = new RichTextBoxSynchronizedScroll();
+                    box.Dock = DockStyle.Fill;
+                    box.Multiline = true;
+                    box.AcceptsTab = true;
+                    box.Text = sr.ReadToEnd();
+
+                    XDocument doc = XDocument.Parse(box.Text);
+                    TabPage tab = addTab(xmlPath);
+                    foreach (var name in doc.Root.DescendantNodes().OfType<XElement>().Select(x => x.Name).Distinct())
+                    {
+                        listBox2.Items.Add(name);
+                    }
+                    tab.Controls.Add(richTextBox2);
+
+                    //...........................................................................
+
+                    tab.Controls.Add(box);
+                    tab.Controls.SetChildIndex(box, 0);
+                    focusedRichTextBox = box;
+                    focusedRichTextBox.Font = font;
+
+                    focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
+                    focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
+
+                    HighLight.hLRTF(focusedRichTextBox);
+                    listBox1.Items.Add("XML file loaded");
+                    lineNumbering();
+                //}
+            }
+        }
+
         #endregion privateMethods
 
         private void button1_Click(object sender, EventArgs e)
@@ -757,7 +779,7 @@ namespace XML_Editor
         {
 
             msg.HWnd = richTextBox2.Handle;
-           // msg.WParam = new IntPtr(0x1);
+            // msg.WParam = new IntPtr(0x1);
             //Console.WriteLine(msg.ToString());
             richTextBox2.PubWndProc(ref msg);
         }
