@@ -10,12 +10,27 @@ namespace XML_Editor
 {
     class HighLight
     {
+       
         public static Color HC_NODE = Color.Firebrick;
         public static Color HC_STRING = Color.Blue;
         public static Color HC_ATTRIBUTE = Color.Red;
         public static Color HC_COMMENT = Color.GreenYellow;
         public static Color HC_INNERTEXT = Color.Black;
 
+        public static void config(string ncolor, string scolor, string acolor, string icolor)
+        {
+            try
+            {
+                HC_NODE = Color.FromName(ncolor);
+                HC_STRING = Color.FromName(scolor);
+                HC_ATTRIBUTE = Color.FromName(acolor);
+                HC_INNERTEXT = Color.FromName(icolor);
+            }
+            catch(ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
 
         public static void hLRTF(RichTextBox rtb)
         {

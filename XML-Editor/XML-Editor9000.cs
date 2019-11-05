@@ -29,9 +29,6 @@ namespace XML_Editor
         private List<int> lineNumbs;
         private static TabControl staticTabcontrol;
 
-
-
-
         #region XMLEditor9000
         public XMLEditor9000()
         {
@@ -40,36 +37,18 @@ namespace XML_Editor
             {
                 rtb.Enter += richTextBox_Enter;
             }
+            
             button1.Text = "\uD83D\uDDD1";//kuka
             newTab.Text = "\uD83D\uDC1C";//ant
-            currentTab = tabPage1;
-
-            focusedRichTextBox = richTextBox1;
-            focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
-            focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
-            lineNumbering();
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            List<string> xmlPaths;
-            Stream xmlStream;
-            /*if (File.Exists(path + "\\config.xml"))
-            {
-
-                xmlPaths = loadConfigXML();
-                using (xmlStream = xmlFileDialog.OpenFile())
-                    foreach (string xmlPath in xmlPaths)
-                    {
-                        openXMLFile(xmlPath, xmlStream);
-                    }
-            }
-            else
-            {
-                createConfigXML();
-            }*/
-
+            
+            
+            
+            
+            //xmlHandler.createConfig();
         }
         private void XMLEditor9000_Load(object sender, EventArgs e)
         {
-
+            loadPrevious();
         }
 
         private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
@@ -202,13 +181,14 @@ namespace XML_Editor
 
                 focusedRichTextBox.Font = fontSize;
                 HighLight.hLRTF(focusedRichTextBox);
+                focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
+                focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
+                currentxsd = null;
+                isvalidated = false;
+                lineNumbering();
             }
 
-            focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
-            focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
-            currentxsd = null;
-            isvalidated = false;
-            lineNumbering();
+            
 
         }
 
@@ -369,10 +349,9 @@ namespace XML_Editor
             {
                 if (xmlFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    
+
                     xmlPath = xmlFileDialog.FileName;
                     //using (xmlStream = xmlFileDialog.OpenFile())
-
                     openXMLFile(xmlPath, xmlStream);
                 }
             }
@@ -736,34 +715,59 @@ namespace XML_Editor
             {
                 /*if (xmlStream != null)
                 {*/
-                    RichTextBoxSynchronizedScroll box = new RichTextBoxSynchronizedScroll();
-                    box.Dock = DockStyle.Fill;
-                    box.Multiline = true;
-                    box.AcceptsTab = true;
-                    box.Text = sr.ReadToEnd();
+                RichTextBoxSynchronizedScroll box = new RichTextBoxSynchronizedScroll();
+                box.Dock = DockStyle.Fill;
+                box.Multiline = true;
+                box.AcceptsTab = true;
+                box.Text = sr.ReadToEnd();
 
-                    XDocument doc = XDocument.Parse(box.Text);
-                    TabPage tab = addTab(xmlPath);
-                    foreach (var name in doc.Root.DescendantNodes().OfType<XElement>().Select(x => x.Name).Distinct())
-                    {
-                        listBox2.Items.Add(name);
-                    }
-                    tab.Controls.Add(richTextBox2);
+                XDocument doc = XDocument.Parse(box.Text);
+                TabPage tab = addTab(xmlPath);
+                foreach (var name in doc.Root.DescendantNodes().OfType<XElement>().Select(x => x.Name).Distinct())
+                {
+                    listBox2.Items.Add(name);
+                }
+                tab.Controls.Add(richTextBox2);
 
-                    //...........................................................................
+                //...........................................................................
 
-                    tab.Controls.Add(box);
-                    tab.Controls.SetChildIndex(box, 0);
-                    focusedRichTextBox = box;
-                    focusedRichTextBox.Font = font;
+                tab.Controls.Add(box);
+                tab.Controls.SetChildIndex(box, 0);
+                focusedRichTextBox = box;
+                focusedRichTextBox.Font = font;
 
-                    focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
-                    focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
+                focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
+                focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
 
-                    HighLight.hLRTF(focusedRichTextBox);
-                    listBox1.Items.Add("XML file loaded");
-                    lineNumbering();
+                HighLight.hLRTF(focusedRichTextBox);
+                listBox1.Items.Add("XML file loaded");
+                lineNumbering();
                 //}
+            }
+        }
+
+        private void loadPrevious()
+        {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            List<string> xmlPaths;
+            if (File.Exists(path + "\\config.xml"))
+            {
+                xmlPaths = xmlHandler.XmlLoad();
+                foreach (string xmlPath in xmlPaths)
+                {
+                    openXMLFile(xmlPath, null);
+
+                }
+                tabControl1.TabPages.Remove(tabPage1);
+            }
+            else
+            {
+                xmlHandler.createConfig();
+                currentTab = tabPage1;
+                focusedRichTextBox = richTextBox1;
+                focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
+                focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
+                lineNumbering();
             }
         }
 
