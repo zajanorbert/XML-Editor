@@ -258,6 +258,7 @@
             // listBox2
             // 
             this.listBox2.AccessibleRole = System.Windows.Forms.AccessibleRole.MenuPopup;
+            this.listBox2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.listBox2.FormattingEnabled = true;
             this.listBox2.Location = new System.Drawing.Point(694, 0);
             this.listBox2.Name = "listBox2";

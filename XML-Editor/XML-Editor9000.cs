@@ -29,6 +29,8 @@ namespace XML_Editor
         private List<int> lineNumbs;
         private static TabControl staticTabcontrol;
 
+        
+        
 
         #region XMLEditor9000
         public XMLEditor9000()
@@ -46,11 +48,20 @@ namespace XML_Editor
             focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
             focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
             lineNumbering();
+<<<<<<< HEAD
             xmlHandler.createConfig();
         }
         private void XMLEditor9000_Load(object sender, EventArgs e)
         {
            
+=======
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            Console.WriteLine(path);
+        }
+        private void XMLEditor9000_Load(object sender, EventArgs e)
+        {
+            
+>>>>>>> 217d9bd2583b4725a303d254ef846b447339b296
         }
 
         private void XMLEditor9000_KeyDown(object sender, KeyEventArgs e)
@@ -715,7 +726,8 @@ namespace XML_Editor
             XDocument doc = XDocument.Parse(focusedRichTextBox.Text);
             foreach (var name in doc.Root.DescendantNodes().OfType<XElement>().Select(x => x.Name).Distinct())
             {
-                listBox2.Items.Add(name);
+                
+                listBox2.Items.Add(name.LocalName);
             }
         }
 
@@ -755,7 +767,7 @@ namespace XML_Editor
 
             msg.HWnd = richTextBox2.Handle;
            // msg.WParam = new IntPtr(0x1);
-            Console.WriteLine(msg.ToString());
+            //Console.WriteLine(msg.ToString());
             richTextBox2.PubWndProc(ref msg);
         }
     }
