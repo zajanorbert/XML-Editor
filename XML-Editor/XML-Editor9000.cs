@@ -28,11 +28,6 @@ namespace XML_Editor
         private List<int> lineNumbs;
         private static TabControl staticTabcontrol;
 
-        private bool exitFlag = false;
-        private Timer myTimer = new Timer();
-
-
-
         public XMLEditor9000()
         {
             InitializeComponent();
