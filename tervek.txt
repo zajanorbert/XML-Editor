@@ -1,0 +1,14 @@
+<xmlroot>
+<Settings>
+	<Setting>
+		<projectname>
+		<fontsize>valami</fontsize>
+		<fontfamily>valami</fontfamily>
+		<fontstyle>valami</fontstyle>
+		<indent>valami</indent>
+		<ncolor>valami</ncolor>
+		<scolor>valami</scolor>
+		<acolor>valami</acolor>
+		<tcolor>valami</tcolor>
+	<Setting>
+</Settings>

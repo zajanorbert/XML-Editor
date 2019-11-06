@@ -44,6 +44,7 @@
             this.IndentSize = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.openConfigFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -154,7 +155,8 @@
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FontSizeOption,
-            this.indentSpaceToolStripMenuItem});
+            this.indentSpaceToolStripMenuItem,
+            this.openConfigFileToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
@@ -162,7 +164,7 @@
             // FontSizeOption
             // 
             this.FontSizeOption.Name = "FontSizeOption";
-            this.FontSizeOption.Size = new System.Drawing.Size(142, 22);
+            this.FontSizeOption.Size = new System.Drawing.Size(159, 22);
             this.FontSizeOption.Text = "Font Size";
             this.FontSizeOption.Click += new System.EventHandler(this.FontSizeOption_Click);
             // 
@@ -173,7 +175,7 @@
             this.toolStripMenuItem3,
             this.toolStripMenuItem4});
             this.indentSpaceToolStripMenuItem.Name = "indentSpaceToolStripMenuItem";
-            this.indentSpaceToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.indentSpaceToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.indentSpaceToolStripMenuItem.Text = "Indent Space";
             // 
             // IndentSize
@@ -196,6 +198,13 @@
             this.toolStripMenuItem4.Size = new System.Drawing.Size(80, 22);
             this.toolStripMenuItem4.Text = "6";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.IndentSize_Click);
+            // 
+            // openConfigFileToolStripMenuItem
+            // 
+            this.openConfigFileToolStripMenuItem.Name = "openConfigFileToolStripMenuItem";
+            this.openConfigFileToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.openConfigFileToolStripMenuItem.Text = "Open config file";
+            this.openConfigFileToolStripMenuItem.Click += new System.EventHandler(this.openConfigFileToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -333,6 +342,7 @@
             this.Name = "XMLEditor9000";
             this.Text = "XMLEditor9000";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.XMLEditor9000_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.XMLEditor9000_FormClosed);
             this.Load += new System.EventHandler(this.XMLEditor9000_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.XMLEditor9000_KeyDown);
             this.menuStrip2.ResumeLayout(false);
@@ -376,6 +386,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.BindingSource bindingSource1;
+        private System.Windows.Forms.ToolStripMenuItem openConfigFileToolStripMenuItem;
     }
 }
 

@@ -10,19 +10,16 @@ using System.Windows.Forms;
 
 namespace XML_Editor
 {
-    public partial class About : Form
+    public partial class Snowman : Form
     {
-        public About()
+        public Snowman()
         {
             InitializeComponent();
         }
 
-        private void About_KeyDown_1(object sender, KeyEventArgs e)
+        private void Snowman_DoubleClick(object sender, EventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
-            {
-                this.Close();
-            }
+            this.Close();
         }
     }
 }

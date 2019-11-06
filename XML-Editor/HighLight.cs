@@ -17,14 +17,16 @@ namespace XML_Editor
         public static Color HC_COMMENT = Color.GreenYellow;
         public static Color HC_INNERTEXT = Color.Black;
 
-        public static void config(string ncolor, string scolor, string acolor, string icolor)
+        public static void config(List<string> crayonsSet)
         {
             try
             {
-                HC_NODE = Color.FromName(ncolor);
-                HC_STRING = Color.FromName(scolor);
-                HC_ATTRIBUTE = Color.FromName(acolor);
-                HC_INNERTEXT = Color.FromName(icolor);
+                //crayonsSet.ToArray();
+                
+                HC_NODE = Color.FromName(crayonsSet[0]);
+                HC_STRING = Color.FromName(crayonsSet[1]);
+                HC_ATTRIBUTE = Color.FromName(crayonsSet[2]);
+                HC_INNERTEXT = Color.FromName(crayonsSet[3]);
             }
             catch(ArgumentNullException e)
             {
@@ -145,6 +147,19 @@ namespace XML_Editor
 
 
             }
+        }
+
+        public static List<string> defaultColors()
+        {
+            List<string> colors;
+            return  colors = new List<string>()
+            {
+                HC_NODE.Name,
+                HC_STRING.Name,
+                HC_ATTRIBUTE.Name,
+                HC_INNERTEXT.Name
+            };
+            
         }
     }
 }

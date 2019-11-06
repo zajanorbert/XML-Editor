@@ -59,6 +59,12 @@
     <Compile Include="RichTextBoxSynchronizedScroll.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Snowman.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Snowman.Designer.cs">
+      <DependentUpon>Snowman.cs</DependentUpon>
+    </Compile>
     <Compile Include="Validation.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +90,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Snowman.resx">
+      <DependentUpon>Snowman.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="XML-Editor9000.resx">
       <DependentUpon>XML-Editor9000.cs</DependentUpon>
     </EmbeddedResource>
@@ -102,6 +111,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="black.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

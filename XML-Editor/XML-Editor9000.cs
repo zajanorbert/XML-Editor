@@ -13,6 +13,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using XML_Editor.Properties;
 
+
 namespace XML_Editor
 {
     public partial class XMLEditor9000 : Form
@@ -28,6 +29,9 @@ namespace XML_Editor
         private bool isvalidated = false;
         private List<int> lineNumbs;
         private static TabControl staticTabcontrol;
+        private WMPLib.WindowsMediaPlayer wplayer = new WMPLib.WindowsMediaPlayer();
+        private List<string> crayonsSet;
+
 
         #region XMLEditor9000
         public XMLEditor9000()
@@ -37,13 +41,13 @@ namespace XML_Editor
             {
                 rtb.Enter += richTextBox_Enter;
             }
-            
+
             button1.Text = "\uD83D\uDDD1";//kuka
             newTab.Text = "\uD83D\uDC1C";//ant
-            
-            
-            
-            
+            wplayer.URL = "1-02 Do You Want to Build a Snowman.mp3";
+
+
+
             //xmlHandler.createConfig();
         }
         private void XMLEditor9000_Load(object sender, EventArgs e)
@@ -109,6 +113,8 @@ namespace XML_Editor
             if (dialog == DialogResult.Yes)
             {
                 //Application.Exit();
+                xmlHandler.updateXml(tabControl1, crayonsSet);
+                //Application.Exit();
                 return;
             }
             else if (dialog == DialogResult.No)
@@ -116,6 +122,10 @@ namespace XML_Editor
                 e.Cancel = true;
             }
 
+        }
+        private void XMLEditor9000_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
 
         #endregion XMLEditor9000
@@ -127,21 +137,6 @@ namespace XML_Editor
                 tabControl1.TabPages.Remove(tabControl1.SelectedTab);
 
 
-        }
-
-        private TabPage addTab(string strfilename)
-        {
-            var lastIndex = this.tabControl1.TabCount - 1;
-            /*if (this.tabControl1.GetTabRect(lastIndex).Contains(me.Location))
-            {*/
-            string title = System.IO.Path.GetFileName(strfilename);
-            TabPage myTabPage = new TabPage(title);
-            myTabPage.Tag = strfilename;
-            tabControl1.TabPages.Insert(lastIndex, myTabPage);
-            this.tabControl1.SelectedIndex = lastIndex;
-            return myTabPage;
-            /*}
-            return null;*/
         }
 
         private void tabControl1_MouseClick(object sender, MouseEventArgs e)
@@ -188,7 +183,7 @@ namespace XML_Editor
                 lineNumbering();
             }
 
-            
+
 
         }
 
@@ -367,6 +362,7 @@ namespace XML_Editor
 
         private void saveOverride(object sender, EventArgs e)
         {
+            string lpath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\config.xml";
             try
             {
                 if (currentTab.Tag != null)
@@ -376,12 +372,40 @@ namespace XML_Editor
                     XmlDocument doc = new XmlDocument();
                     doc.LoadXml(focusedRichTextBox.Text);
                     doc.Save(path);
+                    
                     listBox1.Items.Add("File saved");
-                    currentTab.Text = System.IO.Path.GetFileName(path);
+                    currentTab.Text = Path.GetFileName(path);
                 }
                 else
                 {
                     saveFileToolStripMenuItem_Click(sender, e);
+                }
+                if (currentTab.Tag != null && currentTab.Tag.Equals(lpath))
+                {
+                    crayonsSet = new List<string>();
+                    XmlReader xmlReader = XmlReader.Create(lpath);
+                    while (xmlReader.Read())
+                    {
+                        if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "nodeColor"))
+                        {
+                            crayonsSet.Add(xmlReader.ReadInnerXml());
+                        }
+                        if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "stringColor"))
+                        {
+                            crayonsSet.Add(xmlReader.ReadInnerXml());
+                        }
+                        if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "attributeColor"))
+                        {
+                            crayonsSet.Add(xmlReader.ReadInnerXml());
+                        }
+                        if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "textColor"))
+                        {
+                            crayonsSet.Add(xmlReader.ReadInnerXml());
+                        }
+                    }
+                    HighLight.config(crayonsSet);
+                    tabControl1.TabPages.Remove(currentTab);
+                    tabControl1.TabPages[0].Focus();
                 }
             }
             catch (XmlException xe)
@@ -508,6 +532,12 @@ namespace XML_Editor
             }
 
         }
+
+        private void openConfigFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openXMLFile(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\config.xml", null);
+        }
+
         #endregion Menu
 
         #region XMLStuffs
@@ -628,6 +658,21 @@ namespace XML_Editor
 
         #region privateMethods
 
+        private TabPage addTab(string strfilename)
+        {
+            var lastIndex = this.tabControl1.TabCount - 1;
+            /*if (this.tabControl1.GetTabRect(lastIndex).Contains(me.Location))
+            {*/
+            string title = System.IO.Path.GetFileName(strfilename);
+            TabPage myTabPage = new TabPage(title);
+            myTabPage.Tag = strfilename;
+            tabControl1.TabPages.Insert(lastIndex, myTabPage);
+            this.tabControl1.SelectedIndex = lastIndex;
+            return myTabPage;
+            /*}
+            return null;*/
+        }
+
         private void lineNumbering()
         {
             for (int i = 1; i <= focusedRichTextBox.Lines.Count(); i++)
@@ -720,6 +765,7 @@ namespace XML_Editor
                 box.Multiline = true;
                 box.AcceptsTab = true;
                 box.Text = sr.ReadToEnd();
+                //box.BackColor = Color.Black;
 
                 XDocument doc = XDocument.Parse(box.Text);
                 TabPage tab = addTab(xmlPath);
@@ -750,33 +796,68 @@ namespace XML_Editor
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             List<string> xmlPaths;
-            if (File.Exists(path + "\\config.xml"))
+            try
             {
-                xmlPaths = xmlHandler.XmlLoad();
-                foreach (string xmlPath in xmlPaths)
+                if (File.Exists(path + "\\config.xml"))
                 {
-                    openXMLFile(xmlPath, null);
+                    //do you wanna build a snowman?
+                    crayonsSet = xmlHandler.loadColorConfig();
+                    HighLight.config(crayonsSet);
+                    wplayer.controls.play();
 
+
+                    
+                    DialogResult dialog = MessageBox.Show("Do you wanna build a snowman?", "Last session", MessageBoxButtons.YesNo);
+                    if (dialog == DialogResult.Yes)
+                    {
+
+                        xmlPaths = xmlHandler.XmlLoad();
+                        if (xmlPaths.Count > 0)
+                        {
+                            foreach (string xmlPath in xmlPaths)
+                            {
+                                openXMLFile(xmlPath, null);
+
+                            }
+                            tabControl1.TabPages.Remove(tabPage1);
+                        }
+                        Snowman snowman = new Snowman();
+
+                        snowman.Show();
+                        snowman.TopMost = true;
+                        snowman.FormClosed += Snowman_FormClosed;
+                    }
+                    
                 }
-                tabControl1.TabPages.Remove(tabPage1);
+                else
+                {
+
+                    xmlHandler.createConfig();
+                    crayonsSet = HighLight.defaultColors();
+                    currentTab = tabPage1;
+                    focusedRichTextBox = richTextBox1;
+                    focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
+                    focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
+                    lineNumbering();
+                }
             }
-            else
+            catch(ArgumentNullException ae)
             {
+                listBox1.Items.Add("The config was empty, we made you another one.");
                 xmlHandler.createConfig();
+                crayonsSet = HighLight.defaultColors();
                 currentTab = tabPage1;
                 focusedRichTextBox = richTextBox1;
                 focusedRichTextBox.MouseWheel += FocusedRichTextBox_MouseWheel;
                 focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
                 lineNumbering();
             }
+            
         }
 
-        #endregion privateMethods
-
-        private void button1_Click(object sender, EventArgs e)
+        private void Snowman_FormClosed(object sender, FormClosedEventArgs e)
         {
-            listBox1.Items.Clear();
-            listBox1.Controls.Clear();
+            wplayer.controls.stop();
         }
 
         private void scrollSyncTxtBox1_vScroll(Message msg)
@@ -787,5 +868,16 @@ namespace XML_Editor
             //Console.WriteLine(msg.ToString());
             richTextBox2.PubWndProc(ref msg);
         }
+
+
+        #endregion privateMethods
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            listBox1.Items.Clear();
+            listBox1.Controls.Clear();
+        }
+
+        
     }
 }
