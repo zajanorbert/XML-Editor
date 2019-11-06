@@ -88,8 +88,8 @@ namespace XML_Editor
             colors.AppendChild(doc.CreateElement("textColor")).InnerText = crayonsSet[3];
             root.AppendChild(colors);
             doc.AppendChild(root);
-
             doc.Save(path);
+            
         }
 
         public static List<string> XmlLoad()
@@ -141,7 +141,7 @@ namespace XML_Editor
             writer.Close();
         }
 
-        public static Font loadFontConfig(RichTextBox rtb)
+        public static Font loadFontConfig()
         {
             Font font;
             string family = "";
@@ -152,24 +152,28 @@ namespace XML_Editor
             XmlReader xmlReader = XmlReader.Create(path);
             while (xmlReader.Read())
             {
-                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "fontFamily"))
-                {
-                    family = xmlReader.ReadInnerXml();
-                }
+                
                 if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "fontSize"))
                 {
                     size = float.Parse(xmlReader.ReadInnerXml());
+                    
+                }
+                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "fontFamily"))
+                {
+                    family = xmlReader.ReadInnerXml();
+
                 }
                 if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "fontStyle"))
                 {
                     sStyle = xmlReader.ReadInnerXml();
+                    
                 }
             }
-            var info = typeof(FontStyle).GetProperty(sStyle, System.Reflection.BindingFlags.IgnoreCase);
-            style = (FontStyle)info.GetValue(null, null);
+            style = (FontStyle)Enum.Parse(typeof(FontStyle), sStyle, true);
             font = new Font(family, size, style);
             return font;
         }
+
         public static List<string> loadColorConfig()
         {
             List<string> crayonsSet = new List<string>();

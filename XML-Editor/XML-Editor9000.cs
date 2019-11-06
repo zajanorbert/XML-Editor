@@ -12,7 +12,8 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using XML_Editor.Properties;
-
+using System.Threading;
+using System.Diagnostics;
 
 namespace XML_Editor
 {
@@ -50,6 +51,7 @@ namespace XML_Editor
 
             //xmlHandler.createConfig();
         }
+
         private void XMLEditor9000_Load(object sender, EventArgs e)
         {
             
@@ -115,7 +117,11 @@ namespace XML_Editor
             {
                 //Application.Exit();
                 xmlHandler.updateXml(tabControl1, crayonsSet);
+
+                //Thread.CurrentThread.Abort();
                 //Application.Exit();
+                Environment.Exit(0);
+                
                 return;
             }
             else if (dialog == DialogResult.No)
@@ -125,10 +131,7 @@ namespace XML_Editor
 
         }
 
-        private void XMLEditor9000_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Application.Exit();
-        }
+        
 
         #endregion XMLEditor9000
 
@@ -406,6 +409,7 @@ namespace XML_Editor
                         }
                     }
                     HighLight.config(crayonsSet);
+                    listBox1.Font = xmlHandler.loadFontConfig();
                     tabControl1.TabPages.Remove(currentTab);
                     tabControl1.TabPages[0].Focus();
                 }
@@ -414,6 +418,7 @@ namespace XML_Editor
             {
                 Console.WriteLine(xe.Message);
                 listBox1.Items.Add("Invalid XML formation, can't save");
+                listBox1.Items.Add(xe.Message);
             }
         }
 
@@ -805,10 +810,9 @@ namespace XML_Editor
                     //do you wanna build a snowman?
                     crayonsSet = xmlHandler.loadColorConfig();
                     HighLight.config(crayonsSet);
+                    listBox1.Font = xmlHandler.loadFontConfig();
                     wplayer.controls.play();
 
-
-                    
                     DialogResult dialog = MessageBox.Show("Do you wanna build a snowman?", "Last session", MessageBoxButtons.YesNo);
                     if (dialog == DialogResult.Yes)
                     {
@@ -823,11 +827,13 @@ namespace XML_Editor
                             }
                             tabControl1.TabPages.Remove(tabPage1);
                         }
-                        Snowman snowman = new Snowman();
 
+                        focusedRichTextBox.Font = listBox1.Font;
+                        Snowman snowman = new Snowman();
                         snowman.Show();
                         snowman.TopMost = true;
                         snowman.FormClosed += Snowman_FormClosed;
+                        
                     }
                     
                 }
@@ -854,12 +860,20 @@ namespace XML_Editor
                 focusedRichTextBox.vScroll += scrollSyncTxtBox1_vScroll;
                 lineNumbering();
             }
-            
+            return;
         }
 
         private void Snowman_FormClosed(object sender, FormClosedEventArgs e)
         {
             wplayer.controls.stop();
+            
+            wplayer.enabled = false;
+            wplayer.close();
+            var proc = Process.GetProcessesByName("wmplayer");
+            if (proc.Length > 0)
+            {
+                proc[proc.Length].Kill();
+            }
         }
 
         private void scrollSyncTxtBox1_vScroll(Message msg)

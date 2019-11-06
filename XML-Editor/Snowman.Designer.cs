@@ -40,6 +40,7 @@
             this.ClientSize = new System.Drawing.Size(604, 620);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Snowman";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Snowman";
             this.DoubleClick += new System.EventHandler(this.Snowman_DoubleClick);
             this.ResumeLayout(false);
