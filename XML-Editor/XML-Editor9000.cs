@@ -44,7 +44,7 @@ namespace XML_Editor
 
             button1.Text = "\uD83D\uDDD1";//kuka
             newTab.Text = "\uD83D\uDC1C";//ant
-            wplayer.URL = "1-02 Do You Want to Build a Snowman.mp3";
+            wplayer.URL = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\")) + @"\Properties\1-02 Do You Want to Build a Snowman.mp3";
 
 
 
@@ -52,6 +52,7 @@ namespace XML_Editor
         }
         private void XMLEditor9000_Load(object sender, EventArgs e)
         {
+            
             loadPrevious();
         }
 
@@ -123,6 +124,7 @@ namespace XML_Editor
             }
 
         }
+
         private void XMLEditor9000_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
