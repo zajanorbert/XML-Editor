@@ -19,9 +19,6 @@ namespace XML_Editor
         public static void updateXml(TabControl tabControl, List<string> crayonsSet)
         {
 
-            //doc.LoadXml(focusedRichTextBox.Text);
-
-
             #region writer
             /*XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
@@ -61,11 +58,11 @@ namespace XML_Editor
             XmlDocument doc = new XmlDocument();
             doc.Load(path);
             doc.RemoveAll();
-            doc.CreateXmlDeclaration("1.0", "UTF-8", null);
 
+            doc.AppendChild(doc.CreateXmlDeclaration("1.0", "UTF-8", null));
 
-            doc.PreserveWhitespace = true;
             XmlNode root = doc.CreateElement("Settings");
+
             foreach (TabPage tab in tabControl.TabPages)
             {
                 if (tab.Tag != null)
@@ -95,13 +92,15 @@ namespace XML_Editor
         public static List<string> XmlLoad()
         {
             List<string> paths = new List<string>();
-            XmlReader xmlReader = XmlReader.Create(path);
-            while (xmlReader.Read())
+            using (XmlReader xmlReader = XmlReader.Create(path))
             {
-                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "projectName"))
+                while (xmlReader.Read())
                 {
-                    paths.Add(xmlReader.ReadInnerXml());
-                    
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "projectName"))
+                    {
+                        paths.Add(xmlReader.ReadInnerXml());
+
+                    }
                 }
             }
             return paths;
@@ -149,24 +148,26 @@ namespace XML_Editor
             FontStyle style;
             string sStyle = "";
 
-            XmlReader xmlReader = XmlReader.Create(path);
-            while (xmlReader.Read())
+            using (XmlReader xmlReader = XmlReader.Create(path))
             {
-                
-                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "fontSize"))
+                while (xmlReader.Read())
                 {
-                    size = float.Parse(xmlReader.ReadInnerXml());
-                    
-                }
-                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "fontFamily"))
-                {
-                    family = xmlReader.ReadInnerXml();
 
-                }
-                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "fontStyle"))
-                {
-                    sStyle = xmlReader.ReadInnerXml();
-                    
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "fontSize"))
+                    {
+                        size = float.Parse(xmlReader.ReadInnerXml());
+
+                    }
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "fontFamily"))
+                    {
+                        family = xmlReader.ReadInnerXml();
+
+                    }
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "fontStyle"))
+                    {
+                        sStyle = xmlReader.ReadInnerXml();
+
+                    }
                 }
             }
             style = (FontStyle)Enum.Parse(typeof(FontStyle), sStyle, true);
@@ -177,27 +178,28 @@ namespace XML_Editor
         public static List<string> loadColorConfig()
         {
             List<string> crayonsSet = new List<string>();
-            XmlReader xmlReader = XmlReader.Create(path);
-            while (xmlReader.Read())
+            using (XmlReader xmlReader = XmlReader.Create(path))
             {
-                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "nodeColor"))
+                while (xmlReader.Read())
                 {
-                    crayonsSet.Add(xmlReader.ReadInnerXml());
-                }
-                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "stringColor"))
-                {
-                    crayonsSet.Add(xmlReader.ReadInnerXml());
-                }
-                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "attributeColor"))
-                {
-                    crayonsSet.Add(xmlReader.ReadInnerXml());
-                }
-                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "textColor"))
-                {
-                    crayonsSet.Add(xmlReader.ReadInnerXml());
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "nodeColor"))
+                    {
+                        crayonsSet.Add(xmlReader.ReadInnerXml());
+                    }
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "stringColor"))
+                    {
+                        crayonsSet.Add(xmlReader.ReadInnerXml());
+                    }
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "attributeColor"))
+                    {
+                        crayonsSet.Add(xmlReader.ReadInnerXml());
+                    }
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "textColor"))
+                    {
+                        crayonsSet.Add(xmlReader.ReadInnerXml());
+                    }
                 }
             }
-
             return crayonsSet;
         }
     }

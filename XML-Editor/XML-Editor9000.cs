@@ -120,6 +120,8 @@ namespace XML_Editor
 
                 //Thread.CurrentThread.Abort();
                 //Application.Exit();
+                var prc = Process.GetProcessesByName("XML-Editor");
+                if (prc.Length > 0) prc[prc.Length - 1].Kill();
                 Environment.Exit(0);
                 
                 return;
@@ -388,30 +390,34 @@ namespace XML_Editor
                 if (currentTab.Tag != null && currentTab.Tag.Equals(lpath))
                 {
                     crayonsSet = new List<string>();
-                    XmlReader xmlReader = XmlReader.Create(lpath);
-                    while (xmlReader.Read())
+                    using (XmlReader xmlReader = XmlReader.Create(lpath))
                     {
-                        if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "nodeColor"))
+                        while (xmlReader.Read())
                         {
-                            crayonsSet.Add(xmlReader.ReadInnerXml());
-                        }
-                        if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "stringColor"))
-                        {
-                            crayonsSet.Add(xmlReader.ReadInnerXml());
-                        }
-                        if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "attributeColor"))
-                        {
-                            crayonsSet.Add(xmlReader.ReadInnerXml());
-                        }
-                        if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "textColor"))
-                        {
-                            crayonsSet.Add(xmlReader.ReadInnerXml());
+                            if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "nodeColor"))
+                            {
+                                crayonsSet.Add(xmlReader.ReadInnerXml());
+                            }
+                            if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "stringColor"))
+                            {
+                                crayonsSet.Add(xmlReader.ReadInnerXml());
+                            }
+                            if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "attributeColor"))
+                            {
+                                crayonsSet.Add(xmlReader.ReadInnerXml());
+                            }
+                            if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "textColor"))
+                            {
+                                crayonsSet.Add(xmlReader.ReadInnerXml());
+                            }
                         }
                     }
+                    
                     HighLight.config(crayonsSet);
                     listBox1.Font = xmlHandler.loadFontConfig();
                     tabControl1.TabPages.Remove(currentTab);
-                    tabControl1.TabPages[0].Focus();
+                    tabControl1.TabPages[0].Select();
+                    currentTab = tabControl1.TabPages[0];
                 }
             }
             catch (XmlException xe)
@@ -866,14 +872,10 @@ namespace XML_Editor
         private void Snowman_FormClosed(object sender, FormClosedEventArgs e)
         {
             wplayer.controls.stop();
-            
             wplayer.enabled = false;
             wplayer.close();
-            var proc = Process.GetProcessesByName("wmplayer");
-            if (proc.Length > 0)
-            {
-                proc[proc.Length].Kill();
-            }
+            var prc = Process.GetProcessesByName("wmplayer");
+            if (prc.Length > 0) prc[prc.Length - 1].Kill();
         }
 
         private void scrollSyncTxtBox1_vScroll(Message msg)
