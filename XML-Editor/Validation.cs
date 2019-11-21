@@ -28,7 +28,7 @@ namespace XML_Editor
             listBox.Items.Clear();
             listBox.Controls.Clear();
             
-            listBox.Items.Add("=======================================|");
+            listBox.Items.Add("|=======================================|");
             if (_issueCounter > 0)
             {
                 listBox.Items.Add(fileName + " is not valid");
@@ -51,8 +51,10 @@ namespace XML_Editor
                     LinkLabel.Link data = new LinkLabel.Link();
                     foreach (var line in lineNumbs)
                     {
+                        
                         if(comment.Contains(line.ToString()))
                         {
+                            
                             data.LinkData = @currentTab.Tag + ";" + line;
                         }
                     }
@@ -64,8 +66,6 @@ namespace XML_Editor
                     listBox.Items.Add(linkLabel1.Text);
                     linkLabel1.Location = new Point(0, int.Parse(i.ToString()));
                     i += listBox.ItemHeight;
-                    
-
                 }
             }
             

@@ -43,6 +43,14 @@ namespace XML_Editor
                 rtb.Enter += richTextBox_Enter;
             }
 
+            /*
+            var colors = Enum.GetValues(typeof(KnownColor));
+            foreach(KnownColor color in colors)
+            {
+                Console.WriteLine(@"<xsd:enumeration value=""{0}""/>",Color.FromKnownColor(color).Name);
+            }
+            */
+
             button1.Text = "\uD83D\uDDD1";//kuka
             newTab.Text = "\uD83D\uDC1C";//ant
             wplayer.URL = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\")) + @"\Properties\1-02 Do You Want to Build a Snowman.mp3";
@@ -54,7 +62,7 @@ namespace XML_Editor
 
         private void XMLEditor9000_Load(object sender, EventArgs e)
         {
-            
+
             loadPrevious();
         }
 
@@ -123,7 +131,7 @@ namespace XML_Editor
                 var prc = Process.GetProcessesByName("XML-Editor");
                 if (prc.Length > 0) prc[prc.Length - 1].Kill();
                 Environment.Exit(0);
-                
+
                 return;
             }
             else if (dialog == DialogResult.No)
@@ -133,7 +141,7 @@ namespace XML_Editor
 
         }
 
-        
+
 
         #endregion XMLEditor9000
 
@@ -369,6 +377,8 @@ namespace XML_Editor
 
         private void saveOverride(object sender, EventArgs e)
         {
+
+
             string lpath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\config.xml";
             try
             {
@@ -379,7 +389,7 @@ namespace XML_Editor
                     XmlDocument doc = new XmlDocument();
                     doc.LoadXml(focusedRichTextBox.Text);
                     doc.Save(path);
-                    
+
                     listBox1.Items.Add("File saved");
                     currentTab.Text = Path.GetFileName(path);
                 }
@@ -389,35 +399,46 @@ namespace XML_Editor
                 }
                 if (currentTab.Tag != null && currentTab.Tag.Equals(lpath))
                 {
-                    crayonsSet = new List<string>();
-                    using (XmlReader xmlReader = XmlReader.Create(lpath))
+                    try
                     {
-                        while (xmlReader.Read())
+                        currentxsd = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\config.xsd";
+                        
+                        validationToolStripMenuItem.PerformClick();
+                        crayonsSet = new List<string>();
+                        using (XmlReader xmlReader = XmlReader.Create(lpath))
                         {
-                            if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "nodeColor"))
+                            while (xmlReader.Read())
                             {
-                                crayonsSet.Add(xmlReader.ReadInnerXml());
-                            }
-                            if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "stringColor"))
-                            {
-                                crayonsSet.Add(xmlReader.ReadInnerXml());
-                            }
-                            if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "attributeColor"))
-                            {
-                                crayonsSet.Add(xmlReader.ReadInnerXml());
-                            }
-                            if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "textColor"))
-                            {
-                                crayonsSet.Add(xmlReader.ReadInnerXml());
+                                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "nodeColor"))
+                                {
+                                    crayonsSet.Add(xmlReader.ReadInnerXml());
+                                }
+                                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "stringColor"))
+                                {
+                                    crayonsSet.Add(xmlReader.ReadInnerXml());
+                                }
+                                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "attributeColor"))
+                                {
+                                    crayonsSet.Add(xmlReader.ReadInnerXml());
+                                }
+                                if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "textColor"))
+                                {
+                                    crayonsSet.Add(xmlReader.ReadInnerXml());
+                                }
                             }
                         }
+
+                        HighLight.config(crayonsSet);
+                        listBox1.Font = xmlHandler.loadFontConfig();
+                    }catch(Exception ex)
+                    {
+                        listBox1.Items.Add(ex.Message);
                     }
-                    
-                    HighLight.config(crayonsSet);
-                    listBox1.Font = xmlHandler.loadFontConfig();
-                    tabControl1.TabPages.Remove(currentTab);
+
+
+                    /*tabControl1.TabPages.Remove(currentTab);
                     tabControl1.TabPages[0].Select();
-                    currentTab = tabControl1.TabPages[0];
+                    currentTab = tabControl1.TabPages[0];*/
                 }
             }
             catch (XmlException xe)
@@ -839,9 +860,9 @@ namespace XML_Editor
                         snowman.Show();
                         snowman.TopMost = true;
                         snowman.FormClosed += Snowman_FormClosed;
-                        
+
                     }
-                    
+
                 }
                 else
                 {
@@ -855,7 +876,7 @@ namespace XML_Editor
                     lineNumbering();
                 }
             }
-            catch(ArgumentNullException ae)
+            catch (ArgumentNullException ae)
             {
                 listBox1.Items.Add("The config was empty, we made you another one.");
                 xmlHandler.createConfig();
@@ -896,6 +917,6 @@ namespace XML_Editor
             listBox1.Controls.Clear();
         }
 
-        
+
     }
 }

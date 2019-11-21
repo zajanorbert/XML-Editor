@@ -61,29 +61,45 @@ namespace XML_Editor
 
             doc.AppendChild(doc.CreateXmlDeclaration("1.0", "UTF-8", null));
 
-            XmlNode root = doc.CreateElement("Settings");
+            XmlElement root = doc.CreateElement("Settings");
+            var xsi = "http://www.w3.org/2001/XMLSchema-instance";
+            XmlAttribute xmlns = doc.CreateAttribute("xmlns:xsd");
+            xmlns.Value = xsi;
+            root.Attributes.Append(xmlns);
 
+            xmlns = doc.CreateAttribute("noNamespaceSchemaLocation", xsi);
+            xmlns.Value = "config.xsd";
+            root.Attributes.Append(xmlns);
+
+
+            RichTextBoxSynchronizedScroll fontBox = new RichTextBoxSynchronizedScroll();
+            XmlElement file = doc.CreateElement("Files");
             foreach (TabPage tab in tabControl.TabPages)
             {
                 if (tab.Tag != null)
                 {
                     var box = tab.Controls.OfType<RichTextBoxSynchronizedScroll>().First();
-                    XmlNode file = doc.CreateElement("File");
                     file.AppendChild(doc.CreateElement("projectName")).InnerText = tab.Tag.ToString();
-                    file.AppendChild(doc.CreateElement("fontSize")).InnerText = box.Font.Size.ToString();
-                    file.AppendChild(doc.CreateElement("fontFamily")).InnerText = box.Font.FontFamily.Name;
-                    file.AppendChild(doc.CreateElement("fontStyle")).InnerText = box.Font.Style.ToString();
-                    //file.AppendChild(doc.CreateElement("indent", indent.ToString()));
-                    root.AppendChild(file);
+                    fontBox = box;
                 }
 
             }
-            XmlNode colors = doc.CreateElement("Colors");
+            
+            root.AppendChild(file);
+
+            XmlElement font = doc.CreateElement("Font");
+            font.AppendChild(doc.CreateElement("fontSize")).InnerText = fontBox.Font.Size.ToString();
+            font.AppendChild(doc.CreateElement("fontFamily")).InnerText = fontBox.Font.FontFamily.Name;
+            font.AppendChild(doc.CreateElement("fontStyle")).InnerText = fontBox.Font.Style.ToString();
+            root.AppendChild(font);
+
+            XmlElement colors = doc.CreateElement("Colors");
             colors.AppendChild(doc.CreateElement("nodeColor")).InnerText = crayonsSet[0];
             colors.AppendChild(doc.CreateElement("stringColor")).InnerText = crayonsSet[1];
             colors.AppendChild(doc.CreateElement("attributeColor")).InnerText = crayonsSet[2];
             colors.AppendChild(doc.CreateElement("textColor")).InnerText = crayonsSet[3];
             root.AppendChild(colors);
+            
             doc.AppendChild(root);
             doc.Save(path);
             
@@ -112,7 +128,7 @@ namespace XML_Editor
             settings.Indent = true;
             XmlWriter writer = XmlWriter.Create(path);
             writer.WriteStartDocument();
-            writer.WriteStartElement("Settings");
+            writer.WriteStartElement("Settings", "http://www.w3.org/2001/XMLSchema");
 
 
             writer.WriteStartElement("Font");
